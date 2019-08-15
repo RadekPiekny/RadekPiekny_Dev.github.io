@@ -1,0 +1,14 @@
+:host {
+    width: 100%;
+    height: 100%;
+}
+.lightState {
+    transform-origin: 50% 200%;
+    transition: all 1s ease;
+}
+.background {
+    transition: fill .8s ease;
+}
+.sun {
+    fill: var(--Nav-BG-Color);
+}

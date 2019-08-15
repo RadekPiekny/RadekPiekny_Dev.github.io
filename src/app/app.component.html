@@ -1,0 +1,9 @@
+<nav [attr.data-theme]="getTheme()">
+    <a [routerLink]="[ '/bitcoin' ]">bitcoin</a>
+    <a [routerLink]="[ '/lightning' ]">lightning</a>
+    <a [routerLink]="[ '/slider' ]">slider</a>
+    <light-dark-mode (_darkMode)="changeMode($event)"></light-dark-mode>
+</nav>
+<main [attr.data-theme]="getTheme()">
+    <router-outlet></router-outlet>
+</main>

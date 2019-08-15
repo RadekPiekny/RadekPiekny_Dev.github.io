@@ -1,0 +1,98 @@
+:host {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    min-height: calc(100vh - var(--nav-height));
+}
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+aside {
+    box-shadow: -10px -10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 400px;
+    position: relative;
+    padding: 1rem;
+}
+.card {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    transition: transform 1s forwards;
+}
+.shake {
+    animation: shake .5s forwards, show .5s cubic-bezier(.51,-0.74,.31,1.56) forwards;
+}
+.shakeCard {
+    animation: shakeCard .5s forwards cubic-bezier(.3,.02,0,1.28);
+}
+@keyframes show {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+@keyframes shake {
+    10% {
+        transform: translate(.6px,.3px);
+    }
+    20% {
+        transform: translate(-.3px,.1px);
+    }
+    30% {
+        transform: translate(.2px,-.3px);
+    }
+    40% {
+        transform: translate(.5px,.2px);
+        opacity: 1;
+    }
+    50% {
+        transform: translate(-.1px,.5px);
+    }
+    60% {
+        transform: translate(.2px,.3px);
+    }
+    70% {
+        transform: translate(-.5px,.1px);
+        opacity: 1;
+    }
+    80% {
+        transform: translate(-.2px,.8px);
+    }
+    90% {
+        transform: translate(.6px);
+    }
+    100% {
+        transform: translate(0px);
+    }
+}
+
+@keyframes shakeCard {
+    25% {
+        transform: translate(.6px,-.41px);
+    }
+    50% {
+        transform: translate(-.2px,.28px);
+    }
+    75% {
+        transform: translate(.4px,-.1px);
+    }
+    100% {
+        transform: translate(0,0);
+    }
+}
+button {
+    all: unset;
+    cursor: pointer;
+    margin: 3rem 2rem;
+    text-align: center;
+    color: rgb(160,160,160)
+}

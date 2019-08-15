@@ -1,0 +1,85 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    --height-block: 3rem;
+    --track-height: 3px;
+    overflow: visible;
+}
+.wrapper {
+    display: block;
+    width: 100%;
+    display: flex;
+}
+.track-container {
+    display: flex;
+    flex: 1;
+    position: relative;
+    align-items: center;
+    height: var(--height-block);
+}
+.block {
+    height: var(--height-block);
+    width: var(--height-block);
+    display: flex;
+    font-size: 0.75rem;
+}
+.values {
+    position: absolute;
+    justify-content: center;
+    align-items: flex-end;
+}
+.to {
+    left: calc(100% - 16px - var(--height-block));
+}
+.thumb {
+    background-color: rgba(255, 255, 255, 0.1);
+    position: absolute;
+    border-radius: 50%;
+    top: 0;
+    left: 0;
+    cursor: grab;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    transition: background-color .3s ease;
+}
+.thumb div {
+    border-radius: 50%;
+    background-color: blueviolet;
+}
+.thumb span {
+    position: absolute;
+    font-size: 0.75rem;
+    width: 100%;
+    text-align: center;
+    top: 0;
+    left: 0;
+    transition: transform .3s ease;
+}
+.track {
+    position: absolute;
+    height: var(--track-height);
+    top: calc(var(--height-block) / 2 - var(--track-height) / 2);
+    width: calc(100% - var(--height-block));
+    left: calc(var(--height-block) / 2);
+    background-color: rgb(179, 179, 179);
+}
+.from-to {
+    height: var(--track-height);
+    background-color: rgb(138, 43, 226);
+    margin-left: calc(var(--height-block) / 2);
+}
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: transparent;
+    z-index: 1000;
+}
+p {
+    font-size: 0.75rem;
+    margin:  0.1rem calc(var(--height-block) / 2);
+}

@@ -1,0 +1,23 @@
+<p>{{label}}</p>
+<div class="wrapper">
+  <div class="block values From">
+    <span>{{minValue}}</span>
+  </div>
+  <div class="block values to">
+    <span>{{maxValue}}</span>
+  </div>
+  <div #trackContainerEl class="track-container">
+    <div #track class="track"></div>
+    <div class="from-to" [ngStyle]="getFromtToStyle()"></div>
+    <div #thumbMinEl class="block thumb" [ngStyle]="getThumbMinStyle()">
+      <div [ngStyle]="shrinkThumb()"></div>
+      <span [ngStyle]="minValueTextPosition()">{{valueFrom}}</span>
+    </div>
+    <div #thumbMaxEl class="block thumb" [ngStyle]="getThumbMaxStyle()">
+      <div [ngStyle]="shrinkThumb()"></div>
+      <span [ngStyle]="maxValueTextPosition()">{{valueTo}}</span>
+    </div>
+  </div>
+
+</div>
+<div *ngIf="active" class="overlay" (mouseup)="deactivate()" (mousemove)="valueChange($event)"></div>
