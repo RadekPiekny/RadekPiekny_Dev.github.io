@@ -11,7 +11,6 @@ nav {
 }
 main {
     min-height: calc(100vh - var(--nav-height));
-    overflow: hidden;
     background-color: var(--Main-BG-Color);
     transition: background-color .3s ease;
     color: var(--Font-Color);

@@ -289,5 +289,32 @@ export class LightningComponent implements OnInit {
     this.ref.markForCheck();
   }
 
+  mirrorPointBackward(pointFrom: Point, pointTo: Point, pointStart: Point, distance: number): Point {
+    let newPoint: Point;
+    let mirrorPoint: Point;
+    let angle: number;
+    let a: number;
+    let b: number;
+    let c: number;
+    a = pointTo.y - pointFrom.y;
+    b = pointTo.x - pointFrom.x;
+    c = Math.hypot(a,b);
+
+    if (pointStart.x == pointTo.x) {
+      //a line
+      newPoint.x = pointTo.x + distance;
+      newPoint.y = pointTo.y;
+      return newPoint;
+    }
+    if (pointStart.x < pointTo.x) {
+      //tupy uhel
+      return;
+    }
+    if (pointStart.x > pointTo.x) {
+      //ostry uhel
+      return;
+    }
+  }
+
 }
 
