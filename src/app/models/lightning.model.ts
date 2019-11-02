@@ -25,6 +25,12 @@ export class Tendency {
 export class Point {
     x: number;
     y: number;
+    width?: number;
+}
+
+export class Line {
+    p1: Point = new Point;
+    p2: Point = new Point;
 }
 
 export class RND {
