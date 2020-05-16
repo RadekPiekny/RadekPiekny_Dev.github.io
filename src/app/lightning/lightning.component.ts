@@ -49,12 +49,13 @@ export class LightningComponent implements OnInit {
   }
 
   generateNewLightning() {
+    this.lightnings = []
     let l: Lightning = new Lightning;
     l.start.x = this.getRandomArbitrary(this.positionFromTo.valueFrom,this.positionFromTo.valueTo);
     l.start.y = 0;
     l.animationSpeed = this.getRandomArbitrary(this.animationSpeed.valueFrom,this.animationSpeed.valueTo);
-    l.countPoints = 60;
-    l.lightningChain = this.getRandomArbitrary(this.chains.valueFrom,this.chains.valueTo);
+    l.countPoints = 90;
+    l.lightningChain = this.getRandomInt(this.chains.valueFrom,this.chains.valueTo);
     l.tendency.left = 2;
     l.tendency.right = -3;
     l.bezier = false;
@@ -89,8 +90,12 @@ export class LightningComponent implements OnInit {
     }
 
     if (l.startWidth != l.endWidth) {
-      let pointsBack: Point[] = this.getNarrowingLine(lightning.points,lightning.startWidth,lightning.endWidth);
-      lightning.points.push(...pointsBack);
+      let pointsBack: Point[] = this.getNarrowingLine(lightning.points,l.startWidth,l.endWidth);
+      try {
+        lightning.points.push(...pointsBack);
+      } catch (error) {
+        console.log(pointsBack);
+      }
     }
     this.generatePath(lightning);
     this.lightnings.push(lightning);
@@ -98,7 +103,10 @@ export class LightningComponent implements OnInit {
 
     for (let i = 0; i < l.lightningChain; i++) {
       let sideLightning: Lightning = new Lightning;
-      let rndPoint: number = this.getRandomInt(0,lightning.points.length - 1);
+      if (lightning.points.length < 2) {
+        return
+      }
+      let rndPoint: number = this.getRandomInt(1,lightning.points.length - 1);
       for (let index = 1; index < rndPoint + 1; index++) {
         let squareX = Math.pow((lightning.points[index].x - lightning.points[index-1].x),2)
         let squareY = Math.pow((lightning.points[index].y - lightning.points[index-1].y),2)
@@ -111,8 +119,8 @@ export class LightningComponent implements OnInit {
       sideLightning.bezier = l.bezier;
       sideLightning.lightningChain = Math.floor(this.getRandomInt(0,l.lightningChain / 1.5));
       sideLightning.countPoints = this.getRandomInt(0,l.countPoints);
-      sideLightning.startWidth = this.getRandomArbitrary(0.1,l.startWidth - (rndPoint * widthDiffPerPoint));
-      sideLightning.endWidth = 0.1;
+      sideLightning.startWidth = lightning.points[rndPoint].width;
+      sideLightning.endWidth = 0;
       sideLightning.tendency.left = this.getRandomArbitrary(0,0);
       sideLightning.tendency.right = this.getRandomArbitrary(4,10);
       this.generate(sideLightning,lightning.id);
