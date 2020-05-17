@@ -14,13 +14,13 @@ export class LightningComponent implements OnInit {
   maxLightningChains: number = 0;j
   @Input() lightnings: Lightning[] = [];
   cardTransform: string;
-  @ViewChild('card',{static: false}) card: ElementRef;
+  @ViewChild('card') card: ElementRef;
   @ViewChildren('lightningPolyPath') lightningPolyPath: QueryList<ElementRef>;
-  @ViewChild('positionFromTo',{static: false}) positionFromTo: RangeSliderComponent;
-  @ViewChild('animationSpeed',{static: false}) animationSpeed: RangeSliderComponent;
-  @ViewChild('chains',{static: false}) chains: RangeSliderComponent;
-  @ViewChild('startWidth',{static: false}) startWidth: RangeSliderComponent;
-  @ViewChild('endWidth',{static: false}) endWidth: RangeSliderComponent;
+  @ViewChild('positionFromTo') positionFromTo: RangeSliderComponent;
+  @ViewChild('animationSpeed') animationSpeed: RangeSliderComponent;
+  @ViewChild('chains') chains: RangeSliderComponent;
+  @ViewChild('startWidth') startWidth: RangeSliderComponent;
+  @ViewChild('endWidth') endWidth: RangeSliderComponent;
 
   tween_test;
 
