@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, NgZone } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, NgZone, enableProdMode } from '@angular/core';
 
 @Component({
   selector: 'app-bitcoin',
@@ -6,15 +6,21 @@ import { Component, OnInit, ViewChild, ElementRef, NgZone } from '@angular/core'
   styleUrls: ['./bitcoin.component.css']
 })
 export class BitcoinComponent implements OnInit {
-
+  expandSelectionByPX: number = 0;
+  zoomBounceWidth: number = 50;
+  zoomBounceHeight: number = 50;
+  connection: boolean = true;
+  showShape: boolean = false;
+  nodeSizeMin: number = 0.2;
+  nodeSizeMax: number = 0.5;
   devicePixelRatio: number;
   canvasWidth: number;
   canvasHeight: number;
-  nodesCount: number = 300;
+  nodesCount: number = 1;
   pixelData = [];
   nodes = [];
   stoppedNodes: number = 0;
-  duplicateNodes = [];
+  duplicateNodes: Node[] = [];
   R: number = 20;
   running: boolean = true;
   @ViewChild('canvas', {static: true}) canvas: ElementRef<HTMLCanvasElement>;
@@ -44,26 +50,8 @@ export class BitcoinComponent implements OnInit {
     this.drawBitcoin();
     this.getAllPixelArr();
     this.getAllPixelData();
-    this.createNodes();
+    this.newNodes(1);
     this.animate();
-  }
-
-  createNodes() {
-    for (let index = 0; index < this.nodesCount; index++) {
-      let newNode = new Node;
-
-      do {
-        newNode.x = this.getRandomIntNumber(0,this.canvasWidth);
-        newNode.y = this.getRandomIntNumber(0,this.canvasHeight);
-      }
-      while (this.isInShapeff(newNode.x, newNode.y) == false);
-      newNode.r = this.getRandomIntNumber(1,3);
-      newNode.velocity = this.getRandomIntNumber(1,2);
-      newNode.dir_x = this.getRandomNumber(-1,1);
-      newNode.dir_y = this.getRandomNumber(-1,1);
-      this.nodes.push(newNode);
-
-    }
   }
 
   newNodes(change: number) {
@@ -83,10 +71,10 @@ export class BitcoinComponent implements OnInit {
         newNode.y = this.getRandomIntNumber(0,this.canvasHeight);
       }
       while (this.isInShapeff(newNode.x, newNode.y) == false);
-      newNode.r = this.getRandomIntNumber(1,3);
-      newNode.velocity = this.getRandomIntNumber(1,2);
-      newNode.dir_x = this.getRandomNumber(-1,1);
-      newNode.dir_y = this.getRandomNumber(-1,1);
+      newNode.r = this.getRandomNumber(this.nodeSizeMin,this.nodeSizeMax);
+      newNode.velocity = this.getRandomNumber(0.1,1);
+      newNode.dir_x = this.getRandomNumber(-1,1) * newNode.velocity;
+      newNode.dir_y = this.getRandomNumber(-1,1) * newNode.velocity;
       this.nodes.push(newNode);
 
     }
@@ -99,6 +87,9 @@ export class BitcoinComponent implements OnInit {
   getRandomIntNumber(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
   }
+  getRandomIntNegativeNumber(min, max) {
+    return Math.floor(Math.random() * (max - min+1) + min);
+  }
 
   getNodesDistance(node1: Node, node2: Node): number {
     let distance: number;
@@ -110,37 +101,47 @@ export class BitcoinComponent implements OnInit {
     return distance;
   }
 
-  runAnimation() {
-    this.running = !this.running;
+  animate() {
+    this.moveNodes();
+    if (this.running) {
+      requestAnimationFrame(() => this.animate());
+    }
   }
 
-  animate() {
+  moveNodes() {
     this.ctx.fillStyle = "black";
     this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
-
+    if (this.showShape) {
+      this.drawBitcoin();
+    }
     this.nodes.forEach(circle => {
       this.ctx.beginPath();
-      if (this.isInShapeff(circle.x + circle.dir_x, circle.y + circle.dir_y)) {
-        circle.x = circle.x + circle.dir_x
-        circle.y = circle.y + circle.dir_y
-        this.ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2, false);
-        this.ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-        this.ctx.fill();
-        this.drawLines(circle);
+      if (this.isInShapeff(circle.x + circle.dir_x * circle.velocity, circle.y + circle.dir_y * circle.velocity)) {
+        circle.x += circle.dir_x * circle.velocity;
+        circle.y += circle.dir_y * circle.velocity;
       } else {
-        circle.dir_x *= -1;
-        circle.dir_y *= -1;
-        circle.x = circle.x + circle.dir_x
-        circle.y = circle.y + circle.dir_y
-        this.ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2, false);
-        this.ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-        this.ctx.fill();
-        this.drawLines(circle);
+        let newDirX: number;
+        let newDirY: number;
+        do {
+          newDirX = this.getRandomNumber(-1,1);
+          newDirY = this.getRandomNumber(-1,1);
+        } while (this.newDirection(circle,newDirX,newDirY) == false);
+
+        circle.dir_x = newDirX;
+        circle.dir_y = newDirY;
+        circle.x += circle.dir_x
+        circle.y += circle.dir_y
       }
+      if (this.connection) {
+        this.drawLines(circle);
+      };
+      this.ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2, false);
+      this.ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+      this.ctx.fill();
       this.ctx.closePath();
     })
-    requestAnimationFrame(() => this.animate());
   }
+
   drawBitcoin() {
     let blockWidth: number = 0.666 * this.canvasWidth * 0.08;
     let blockHeight: number = blockWidth * 1.5;
@@ -196,21 +197,55 @@ export class BitcoinComponent implements OnInit {
   }
 
   stopAnimation(smooth: boolean = true) {
-    //this.duplicateNodes = this.jsonCopy(this.nodes)
-    if (smooth) {
-      this.nodes.forEach(c => {
-        if (c.dir_x * 0.95 > 0.1 || c.dir_x * 0.95 < -0.1) {
-          c.dir_x *= 0.95;
-        } else {
-          c.dir_x = 0;
-        }
-        if (c.dir_y * 0.95 > 0.1 || c.dir_y * 0.95 < -0.1) {
-          c.dir_y *= 0.95;
-        } else {
-          c.dir_y = 0;
-        }
-      })
+    if (this.running == true) {
+      this.duplicateNodes = this.jsonCopy(this.nodes)
+      this.reduceVelocity(true);
+    } else {
+      this.running = true;
+      this.continueAnimation();
     }
+
+  }
+
+  reduceVelocity(Freeze: boolean = false) {
+    this.nodes.forEach(c => {
+      if (c.dir_x * 0.95 > 0.1 || c.dir_x * 0.95 < -0.1) {
+        c.dir_x *= 0.95;
+      } else {
+        c.dir_x = 0;
+      }
+      if (c.dir_y * 0.95 > 0.1 || c.dir_y * 0.95 < -0.1) {
+        c.dir_y *= 0.95;
+      } else {
+        c.dir_y = 0;
+      }
+    })
+    if (Freeze && this.nodes.reduce((a, b) => a + b.dir_x, 0) !== 0) {
+      requestAnimationFrame(() => this.reduceVelocity(true));
+    } else {
+      this.running = false;
+    }
+
+  }
+
+  increaseVelocity(velocity: number = 0) {
+    this.nodes.forEach((c,i) => {
+      c.velocity = velocity;
+    })
+    this.moveNodes();
+    if (velocity < 1) {
+      requestAnimationFrame(() => this.increaseVelocity(velocity+0.01));
+    } else {
+      this.animate();
+    }
+  }
+
+  continueAnimation() {
+    this.nodes.forEach((c,i) => {
+      c.dir_x = this.getRandomNumber(-1,1);
+      c.dir_y = this.getRandomNumber(-1,1);
+    })
+    this.increaseVelocity();
   }
 
   startAnimation(smooth: boolean = true) {
@@ -234,7 +269,7 @@ export class BitcoinComponent implements OnInit {
         this.ctx.strokeStyle = 'rgba(255, 255, 255,' + (1 - (distance / 40)) + ')';
         this.ctx.moveTo(c.x, c.y);
         this.ctx.lineTo(circle.x,circle.y);
-        this.ctx.lineWidth = 0.3;
+        this.ctx.lineWidth = 0.1;
         this.ctx.stroke();
         this.ctx.closePath();
       }
@@ -260,6 +295,51 @@ export class BitcoinComponent implements OnInit {
     }
   }
 
+  bounceCanvasSquare(origin: Node, destination: Node) {
+    let start: IPoint;
+    let end: IPoint;
+
+    if (origin.y < destination.y) {
+      start.y = origin.y;
+      end.y = destination.y;
+    } else {
+      start.y = destination.y;
+      end.y = origin.y;
+    }
+
+    if (origin.x < destination.x) {
+      start.x = origin.x;
+      end.x = destination.x;
+    } else {
+      start.x = destination.x;
+      end.x = origin.x;
+    }
+  }
+
+  createBounceCanvasDimension(start: IPoint, end: IPoint): boolean[][] {
+    let result: boolean[][] = new Array(end.y - start.y).fill(false).map(() => new Array(end.x - start.x).fill(0));
+    for (let x = start.x; x < end.x; x++) {
+      for (let y = start.y; y < end.y; y++) {
+        result[x][y] = this.pixelData[x][y];
+      }
+    }
+    return result;
+  }
+
+  shapeEdge(bounceCanvas: boolean[][]) {
+    for (let x = 0; x < bounceCanvas[0].length; x++) {
+
+    }
+
+    for (let x = 0; x < bounceCanvas[bounceCanvas.length - 1].length; x++) {
+
+    }
+  }
+
+  newDirection(circle: Node, newDirX: number, newDirY: number): boolean {
+    return this.isInShapeff(circle.x + newDirX, circle.y + newDirY);
+  }
+
 }
 
 class Node {
@@ -269,4 +349,9 @@ class Node {
   velocity: number;
   dir_x: number;
   dir_y: number;
+}
+
+interface IPoint {
+  x: number;
+  y: number;
 }

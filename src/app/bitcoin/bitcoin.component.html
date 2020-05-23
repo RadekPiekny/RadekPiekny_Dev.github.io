@@ -1,9 +1,10 @@
 <Main>
-  <canvas #canvas width="500" height="500"></canvas>
+  <canvas #canvas width="150" height="150"></canvas>
   <nav>
-      <button (click)="stopAnimation()">slower</button>
-      <button (click)="startAnimation()">faster</button>
       <button (click)="newNodes(10)">+ 10 nodes</button>
       <button (click)="newNodes(-10)">-10 nodes</button>
+      <button (click)="connection = !connection">connect</button>
+      <button (click)="showShape = !showShape">show shape</button>
+      <button (click)="stopAnimation()">stop animate</button>
   </nav>
 </Main>
