@@ -1,7 +1,7 @@
-import { RangeSliderComponent } from './../components/range-slider/range-slider.component';
+import { RangeSliderComponent } from '../range-slider/range-slider.component';
 import { Component, OnInit, ElementRef, ViewChild, ViewChildren, ChangeDetectionStrategy, Input, ChangeDetectorRef, QueryList } from '@angular/core';
 import { TweenMax, TimelineMax, Power2 } from 'gsap';
-import { Lightning, Point, Line, Tendency, RND } from '../models/lightning.model';
+import { Lightning, Point, Line, Tendency, RND } from '../../models/lightning.model';
 
 @Component({
   selector: 'app-lightning',

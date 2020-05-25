@@ -11,3 +11,8 @@ main {
     align-items: center;
     flex-direction: column;
 }
+.fps {
+    font-size: x-small;
+    letter-spacing: 1px;
+    color: white;
+}

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -6,22 +7,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  darkMode: boolean;
-  constructor() { }
+  colorScheme: MediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
+  darkMode$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.colorScheme.matches);
+  constructor(
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit() {
-  }
-
-
-  changeMode(darkMode: boolean) {
-    this.darkMode = darkMode;
-  }
-
-  getTheme(): string {
-    if (this.darkMode) {
-      return 'dark';
-    }
-    return 'light';
+    this.colorScheme.addListener(val => {
+      this.darkMode$.next(val.matches);
+      this.cdr.detectChanges();
+    })
   }
 
 }

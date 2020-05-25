@@ -1,9 +1,13 @@
-<nav [attr.data-theme]="getTheme()">
-    <a [routerLink]="[ '/bitcoin' ]">bitcoin</a>
-    <a [routerLink]="[ '/lightning' ]">lightning</a>
-    <a [routerLink]="[ '/slider' ]">slider</a>
-    <light-dark-mode (_darkMode)="changeMode($event)"></light-dark-mode>
-</nav>
-<main [attr.data-theme]="getTheme()">
-    <router-outlet></router-outlet>
-</main>
+
+<div [attr.data-theme]="(darkMode$ | async) ? 'dark':'light'">
+    <nav >
+        <a [routerLink]="[ '/bitcoin' ]">bitcoin</a>
+        <a [routerLink]="[ '/lightning' ]">lightning</a>
+        <a [routerLink]="[ '/playground' ]">playground</a>
+        <a [routerLink]="[ '/slider' ]">slider</a>
+        <light-dark-mode [darkMode]="darkMode$ | async" (darkModeChange)="darkMode$.next($event)"></light-dark-mode>
+    </nav>
+    <main>
+        <router-outlet></router-outlet>
+    </main>
+</div>

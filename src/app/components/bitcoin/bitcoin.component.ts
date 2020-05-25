@@ -16,8 +16,20 @@ export class BitcoinComponent implements OnInit {
   devicePixelRatio: number;
   canvasWidth: number;
   canvasHeight: number;
-  nodesCount: number = 1;
+  nodesCount: number = 300;
   pixelData = [];
+
+  fps: number;
+  frameTime: number;
+  frameTimeSum: number = 0;
+  lastLoop: number = 0;
+  thisLoop: number = 0;
+  updateFreq: number = 20;
+  countToUpdate: number = 0;
+
+  lineWidth: number = 0.3;
+  maxLineDistance: number;
+
   nodes = [];
   stoppedNodes: number = 0;
   duplicateNodes: Node[] = [];
@@ -28,7 +40,7 @@ export class BitcoinComponent implements OnInit {
   timer: number;
 
   constructor(private zone: NgZone) {
-    this.zone.runOutsideAngular(() => { requestAnimationFrame(() => {}); });
+    //this.zone.runOutsideAngular(() => { requestAnimationFrame(() => {}); });
   };
 
   setupCanvas(canvas: ElementRef<HTMLCanvasElement>) {
@@ -38,6 +50,7 @@ export class BitcoinComponent implements OnInit {
     canvas.nativeElement.height = rect.height * devicePixelRatio;
     this.canvasWidth = canvas.nativeElement.width;
     this.canvasHeight = canvas.nativeElement.height;
+    this.maxLineDistance = 0.04 * this.canvasHeight;
     let canvas_context = this.canvas.nativeElement.getContext('2d');
     canvas_context.scale(devicePixelRatio, devicePixelRatio);
     return canvas_context;
@@ -50,7 +63,7 @@ export class BitcoinComponent implements OnInit {
     this.drawBitcoin();
     this.getAllPixelArr();
     this.getAllPixelData();
-    this.newNodes(1);
+    this.newNodes(600);
     this.animate();
   }
 
@@ -104,8 +117,22 @@ export class BitcoinComponent implements OnInit {
   animate() {
     this.moveNodes();
     if (this.running) {
+      this.calculateFPS();
       requestAnimationFrame(() => this.animate());
     }
+  }
+
+  calculateFPS() {
+    if (this.countToUpdate >= this.updateFreq) {
+      this.fps = Math.floor(1000 / (this.frameTimeSum / this.updateFreq));
+      this.countToUpdate = 0;
+      this.frameTimeSum = 0;
+    }
+    this.thisLoop = Date.now();
+    const thisFrameTime = this.thisLoop- this.lastLoop;
+    this.frameTimeSum += thisFrameTime;
+    this.lastLoop = this.thisLoop;
+    this.countToUpdate++
   }
 
   moveNodes() {
@@ -114,32 +141,32 @@ export class BitcoinComponent implements OnInit {
     if (this.showShape) {
       this.drawBitcoin();
     }
-    this.nodes.forEach(circle => {
+    for (let index = 0; index < this.nodes.length; index++) {
       this.ctx.beginPath();
-      if (this.isInShapeff(circle.x + circle.dir_x * circle.velocity, circle.y + circle.dir_y * circle.velocity)) {
-        circle.x += circle.dir_x * circle.velocity;
-        circle.y += circle.dir_y * circle.velocity;
+      if (this.isInShapeff(this.nodes[index].x + this.nodes[index].dir_x * this.nodes[index].velocity, this.nodes[index].y + this.nodes[index].dir_y * this.nodes[index].velocity)) {
+        this.nodes[index].x += this.nodes[index].dir_x * this.nodes[index].velocity;
+        this.nodes[index].y += this.nodes[index].dir_y * this.nodes[index].velocity;
       } else {
         let newDirX: number;
         let newDirY: number;
         do {
           newDirX = this.getRandomNumber(-1,1);
           newDirY = this.getRandomNumber(-1,1);
-        } while (this.newDirection(circle,newDirX,newDirY) == false);
+        } while (this.newDirection(this.nodes[index],newDirX,newDirY) == false);
 
-        circle.dir_x = newDirX;
-        circle.dir_y = newDirY;
-        circle.x += circle.dir_x
-        circle.y += circle.dir_y
+        this.nodes[index].dir_x = newDirX;
+        this.nodes[index].dir_y = newDirY;
+        this.nodes[index].x += this.nodes[index].dir_x
+        this.nodes[index].y += this.nodes[index].dir_y
       }
       if (this.connection) {
-        this.drawLines(circle);
+        this.drawLines(this.nodes[index]);
       };
-      this.ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2, false);
+      this.ctx.arc(this.nodes[index].x, this.nodes[index].y, this.nodes[index].r, 0, Math.PI * 2, false);
       this.ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
       this.ctx.fill();
       this.ctx.closePath();
-    })
+    }
   }
 
   drawBitcoin() {
@@ -258,22 +285,23 @@ export class BitcoinComponent implements OnInit {
   }
 
   drawLines(c: Node) {
-    this.nodes.forEach(circle => {
-      let distance: number;
-      if (c == circle) {
+    let distance: number;
+
+    for (const x of this.nodes) {
+      if (c == x) {
         return;
       }
-      distance = this.getNodesDistance(c, circle)
-      if (distance < 0.05 * this.canvasHeight) {
+      distance = this.getNodesDistance(c, x)
+      if (distance < this.maxLineDistance) {
         this.ctx.beginPath();
-        this.ctx.strokeStyle = 'rgba(255, 255, 255,' + (1 - (distance / 40)) + ')';
+        this.ctx.strokeStyle = 'rgba(255, 255, 255,' + (0.3) + ')';
         this.ctx.moveTo(c.x, c.y);
-        this.ctx.lineTo(circle.x,circle.y);
-        this.ctx.lineWidth = 0.1;
+        this.ctx.lineTo(x.x,x.y);
+        this.ctx.lineWidth = this.lineWidth;
         this.ctx.stroke();
-        this.ctx.closePath();
+        //this.ctx.closePath();
       }
-    })
+    }
   }
 
   getAllPixelArr() {

@@ -1,5 +1,5 @@
 <Main>
-  <canvas #canvas width="150" height="150"></canvas>
+  <canvas #canvas width="300" height="300"></canvas>
   <nav>
       <button (click)="newNodes(10)">+ 10 nodes</button>
       <button (click)="newNodes(-10)">-10 nodes</button>
@@ -8,3 +8,7 @@
       <button (click)="stopAnimation()">stop animate</button>
   </nav>
 </Main>
+<div>
+  <div class="fps">fps: {{fps}}</div>
+  <div style="color: white;">nodes: {{nodes.length}}</div>
+</div>

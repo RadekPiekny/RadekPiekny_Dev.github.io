@@ -1,30 +1,19 @@
-<svg viewBox="0 0 100 100" width="100%" height="100%" preserveAspectRatio="xMaxYMax meet" (click)="changeMode()">
-  <filter id="white-glow">
-      <feFlood result="flood" flood-color="#ffffff" flood-opacity="1"></feFlood>
-      <feComposite in="flood" result="mask" in2="SourceGraphic" operator="in"></feComposite>
-      <feMorphology in="mask" result="dilated" operator="dilate" radius="2"></feMorphology>
-      <feGaussianBlur in="dilated" result="blurred" stdDeviation="3"></feGaussianBlur>
-      <feMerge>
-          <feMergeNode in="blurred"></feMergeNode>
-          <feMergeNode in="SourceGraphic"></feMergeNode>
-      </feMerge>
-  </filter>
-  <filter id="yellow-glow">
-      <feFlood result="flood" flood-color="white" flood-opacity="1"></feFlood>
-      <feComposite in="flood" result="mask" in2="SourceGraphic" operator="in"></feComposite>
-      <feMorphology in="mask" result="dilated" operator="dilate" radius="3"></feMorphology>
-      <feGaussianBlur in="dilated" result="blurred" stdDeviation="3"></feGaussianBlur>
-      <feMerge>
-          <feMergeNode in="blurred"></feMergeNode>
-          <feMergeNode in="SourceGraphic"></feMergeNode>
-      </feMerge>
-  </filter>
+<svg viewBox="0 0 200 100" width="60px" height="30px" preserveAspectRatio="xMaxYMax meet" (click)="changeMode()">
   <mask id="crescent">
-    <rect x="0" y="0" width="100" height="400" fill="white" />
-    <circle cx="39" cy="356" r="22" fill="black" />
+    <rect x="0" y="0" width="200" height="400" fill="white" />
+    <circle cx="89" cy="356" r="22" fill="black" />
   </mask>
-  <g [ngStyle]="{'transform': 'rotate(' + changes * 180 + 'deg)'}" class="lightState" >
-    <circle r="25" cx="50" cy="50" class="sun" attr.filter="url({{completeURL}}#yellow-glow)"></circle>
-    <circle r="25" cx="50" cy="350" fill="white" attr.filter="url({{completeURL}}#white-glow)" attr.mask="url({{completeURL}}#crescent)"></circle>
+  <g [ngStyle]="{'transform': 'rotate(' + (dayNightChangeCount * 180) + 'deg)'}" class="lightState" >
+    <g>
+      <g transform="matrix(1.68341,0,0,1.68341,65.49,-6.83414)">
+        <path d="M20.5,10C19.655,13.815 17.896,17.147 15.221,19.996C11.341,19.533 7.851,18.112 4.752,15.732C6.557,19.197 7.351,22.881 7.133,26.783C3.863,28.922 0.276,30.076 -3.628,30.246C-0.017,31.74 2.959,34.051 5.299,37.18C4.17,40.921 2.164,44.111 -0.718,46.75C3.009,45.574 6.774,45.432 10.579,46.324C12.118,49.916 12.632,53.648 12.121,57.522C14.219,54.226 17.012,51.697 20.5,49.935C23.988,51.697 26.781,54.226 28.879,57.522C28.368,53.648 28.882,49.916 30.421,46.324C34.226,45.432 37.991,45.574 41.718,46.75C38.836,44.111 36.83,40.921 35.701,37.18C38.041,34.051 41.017,31.74 44.628,30.246C40.724,30.076 37.137,28.922 33.867,26.783C33.649,22.881 34.443,19.197 36.248,15.732C33.149,18.112 29.659,19.533 25.779,19.996C23.104,17.147 21.345,13.815 20.5,10ZM20.5,20.78C28.072,20.78 34.22,26.928 34.22,34.5C34.22,42.072 28.072,48.22 20.5,48.22C12.928,48.22 6.78,42.072 6.78,34.5C6.78,26.928 12.928,20.78 20.5,20.78Z" style="fill:rgb(47,47,47);"/>
+    </g>
+      <circle cx="100" cy="51" r="17" style="fill:rgb(90,90,90);"/>
+      <circle cx="100" cy="51" r="12" style="fill:rgb(80,80,80);"/>
+      <circle cx="100" cy="51" r="8" style="fill:rgb(70,70,70);"/>
+    </g>
+    <g>
+      <circle r="25" cx="100" cy="350" fill="white" attr.mask="url({{completeURL}}#crescent)"></circle>
+    </g>
   </g>
 </svg>

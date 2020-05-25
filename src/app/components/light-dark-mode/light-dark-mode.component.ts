@@ -1,32 +1,33 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'light-dark-mode',
   templateUrl: './light-dark-mode.component.html',
   styleUrls: ['./light-dark-mode.component.css']
 })
-export class LightDarkModeComponent implements OnInit {
-
+export class LightDarkModeComponent {
   @Input() darkMode: boolean = false;
-  @Output() _darkMode: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() darkModeChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() darkModeColor: string = 'rgb(40,40,40)';
   @Input() lightModeColor: string = 'rgb(255,255,255)';
 
   completeURL: string;
-  changes: number = 0;
+  dayNightChangeCount: number = 0;
 
   constructor() {
-    let host = window.location.href;
-    this.completeURL = host;
+    this.completeURL = window.location.href;
   }
-
-  ngOnInit() {
+  
+  ngOnChanges(changes: SimpleChanges) {
+    //this.doSomething(changes.darkMode.currentValue);
+    if (changes.darkMode) {
+      this.dayNightChangeCount++;
+    }
   }
 
   changeMode() {
-    this.changes = this.changes + 1;
     this.darkMode = !this.darkMode;
-    this._darkMode.emit(this.darkMode);
+    this.darkModeChange.emit(this.darkMode);
   }
 
 }
