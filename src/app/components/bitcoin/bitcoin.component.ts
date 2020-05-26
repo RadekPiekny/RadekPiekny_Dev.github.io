@@ -85,7 +85,7 @@ export class BitcoinComponent implements OnInit {
       }
       while (this.isInShapeff(newNode.x, newNode.y) == false);
       newNode.r = this.getRandomNumber(this.nodeSizeMin,this.nodeSizeMax);
-      newNode.velocity = this.getRandomNumber(0.1,1);
+      newNode.velocity = this.getRandomNumber(0.4,1);
       newNode.dir_x = this.getRandomNumber(-1,1) * newNode.velocity;
       newNode.dir_y = this.getRandomNumber(-1,1) * newNode.velocity;
       this.nodes.push(newNode);
