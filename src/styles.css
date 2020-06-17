@@ -1,12 +1,12 @@
 :root {
     --Dark-Main-BG-Color: rgb(40,40,40);
-    --Dark-Nav-BG-Color: rgb(40,40,40);
+    --Dark-Nav-BG-Color: MIDNIGHTBLUE;
     --Dark-Nav-BG-Active: rgb(55,55,55);
     --Dark-Font-Color: rgb(200,200,200);
     --Dark-Element-BG-Color: rgb(66,66,66);
 
     --Light-Main-BG-Color: rgb(236, 236, 236);
-    --Light-Nav-BG-Color: rgb(0,191,255);
+    --Light-Nav-BG-Color: LIGHTSKYBLUE;
     --Light-Nav-BG-Active: rgb(200,200,200);
     --Light-Font-Color: rgb(40,40,40);
     --Light-Element-BG-Color: rgb(212, 212, 212);

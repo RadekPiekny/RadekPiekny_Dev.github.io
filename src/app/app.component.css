@@ -1,13 +1,15 @@
 nav {
+    position: relative;
     height: var(--nav-height);
     width: 100vw;
     display: flex;
     align-items: center;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     margin: 0;
     background-color: var(--Nav-BG-Color);
     transition: background-color .3s ease;
     color: var(--Font-Color);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    z-index: 1;
 }
 main {
     min-height: calc(100vh - var(--nav-height));

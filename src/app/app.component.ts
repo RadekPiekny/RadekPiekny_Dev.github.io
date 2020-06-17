@@ -14,6 +14,7 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.darkMode$.next(this.colorScheme.matches);
     this.colorScheme.addListener(val => {
       this.darkMode$.next(val.matches);
       this.cdr.detectChanges();
