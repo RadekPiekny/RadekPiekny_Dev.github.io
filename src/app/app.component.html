@@ -1,11 +1,11 @@
 
-<div [attr.data-theme]="(darkMode$ | async) ? 'dark':'light'">
+<div id="whatever" [ngClass]="(appSettingsService.darkMode$ | async) ? 'dark':'light'">
     <nav >
         <a [routerLink]="[ '/bitcoin' ]">bitcoin</a>
         <a [routerLink]="[ '/lightning' ]">lightning</a>
         <a [routerLink]="[ '/playground' ]">playground</a>
         <a [routerLink]="[ '/slider' ]">slider</a>
-        <light-dark-mode [darkMode]="darkMode$ | async" (darkModeChange)="darkMode$.next($event)"></light-dark-mode>
+        <light-dark-mode [darkMode]="appSettingsService.darkMode$ | async" (darkModeChange)="appSettingsService.darkMode$.next($event)"></light-dark-mode>
     </nav>
     <main>
         <router-outlet></router-outlet>

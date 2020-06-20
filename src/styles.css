@@ -12,14 +12,14 @@
     --Light-Element-BG-Color: rgb(212, 212, 212);
     --nav-height: 3rem;
 }
-[data-theme="light"] {
+.light {
     --Main-BG-Color: var(--Light-Main-BG-Color);
     --Nav-BG-Color: var(--Light-Nav-BG-Color);
     --Nav-BG-Active: var(--Light-Nav-BG-Active);
     --Font-Color: var(--Light-Font-Color);
     --Element-BG-Color: var(--Light-Element-BG-Color);
 }
-[data-theme="dark"] {
+.dark {
     --Main-BG-Color: var(--Dark-Main-BG-Color);
     --Nav-BG-Color: var(--Dark-Nav-BG-Color);
     --Nav-BG-Active: var(--Dark-Nav-BG-Active);

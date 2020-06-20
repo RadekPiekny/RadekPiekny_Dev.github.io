@@ -21,7 +21,6 @@ export class LightDarkModeComponent {
   ngOnChanges(changes: SimpleChanges) {
     //this.doSomething(changes.darkMode.currentValue);
     if (changes.darkMode) {
-      console.log(changes.darkMode);
       this.dayNightChangeCount++;
     }
   }

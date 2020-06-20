@@ -1,3 +1,4 @@
+import { AppSettingsService } from './services/appSettings.service';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
@@ -8,15 +9,16 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class AppComponent implements OnInit {
   colorScheme: MediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
-  darkMode$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.colorScheme.matches);
+
   constructor(
+    public appSettingsService: AppSettingsService,
     private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
-    this.darkMode$.next(this.colorScheme.matches);
+    this.appSettingsService.darkMode$.next(this.colorScheme.matches);
     this.colorScheme.addListener(val => {
-      this.darkMode$.next(val.matches);
+      this.appSettingsService.darkMode$.next(val.matches);
       this.cdr.detectChanges();
     })
   }

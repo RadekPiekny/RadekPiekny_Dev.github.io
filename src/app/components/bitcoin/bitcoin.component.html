@@ -1,14 +1,12 @@
 <Main>
-  <canvas #canvas width="300" height="300"></canvas>
+  <canvas #canvas></canvas>
   <nav>
       <button (click)="newNodes(10)">+ 10 nodes</button>
       <button (click)="newNodes(-10)">-10 nodes</button>
       <button (click)="connection = !connection">connect</button>
       <button (click)="showShape = !showShape">show shape</button>
+      <button (click)="showFPS = !showFPS">show fps</button>
       <button (click)="stopAnimation()">stop animate</button>
+      <button (click)="loopMethodChange()">loop method: {{loopMethodCurrent}}</button>
   </nav>
 </Main>
-<div>
-  <div class="fps">fps: {{fps}}</div>
-  <div style="color: white;">nodes: {{nodes.length}}</div>
-</div>
