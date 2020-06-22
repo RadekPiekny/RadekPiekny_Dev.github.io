@@ -1,11 +1,13 @@
 :host {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    margin: 16PX;
     --height: 10px;
+    font-size: .75em;
 }
 .skill-bar-container {
     position: relative;
-    width: 300px;
     height: var(--height);
     border-radius: calc(var(--height) / 2);
     background-color: var(--Element-BG-Color);
@@ -14,7 +16,7 @@
 }
 .skill-value-bar {
     position: absolute;
-    width: 300px;
+    width: 100%;
     left: -100%;
     height: var(--height);
     border-radius: calc(var(--height) / 2);

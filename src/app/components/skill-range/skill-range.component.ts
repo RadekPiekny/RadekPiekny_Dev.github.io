@@ -7,4 +7,5 @@ import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 })
 export class SkillRangeComponent {
   @Input() value: number; //max 100 as in %
+  @Input() label: string;
 }

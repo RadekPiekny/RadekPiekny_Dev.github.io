@@ -16,4 +16,5 @@ main {
     background-color: var(--Main-BG-Color);
     transition: background-color .3s ease;
     color: var(--Font-Color);
+    overflow: hidden;
 }

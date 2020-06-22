@@ -1,6 +1,7 @@
 
 <div id="whatever" [ngClass]="(appSettingsService.darkMode$ | async) ? 'dark':'light'">
     <nav >
+        <a [routerLink]="[ '/resume' ]">resume-view</a>
         <a [routerLink]="[ '/bitcoin' ]">bitcoin</a>
         <a [routerLink]="[ '/lightning' ]">lightning</a>
         <a [routerLink]="[ '/playground' ]">playground</a>

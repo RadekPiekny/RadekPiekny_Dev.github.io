@@ -1,0 +1,30 @@
+.resume {
+    max-width: 768px;
+    margin: 3em auto;
+}
+h1 + span {
+    display: block;
+    text-align: center;
+}
+h2 {
+    background-color: indigo;
+}
+.synthesis {
+    text-transform: uppercase;
+}
+.triple-col {
+    list-style: none;
+    flex-wrap: wrap;
+    padding: 0;
+}
+.triple-col li {
+    min-width: 220px;
+    width: 30%;
+}
+header {
+    background-color: greenyellow;
+    padding: 32px;
+}
+section:not(:first-child) {
+    padding: 32px;
+}

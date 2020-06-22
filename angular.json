@@ -24,7 +24,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.scss"
             ],
             "scripts": [
               "./node_modules/gsap/umd/TweenMax.js",
@@ -121,6 +121,12 @@
           }
         }
       }
-    }},
-  "defaultProject": "RadekPiekny"
+    }
+  },
+  "defaultProject": "RadekPiekny",
+  "schematics": {
+    "@schematics/angular:component": {
+      "styleext": "scss"
+    }
+  }
 }
