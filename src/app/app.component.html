@@ -4,6 +4,7 @@
         <a [routerLink]="[ '/resume' ]">resume-view</a>
         <a [routerLink]="[ '/bitcoin' ]">bitcoin</a>
         <a [routerLink]="[ '/lightning' ]">lightning</a>
+        <a [routerLink]="[ '/lightning-canvas' ]">lightning-canvas</a>
         <a [routerLink]="[ '/playground' ]">playground</a>
         <a [routerLink]="[ '/slider' ]">slider</a>
         <light-dark-mode [darkMode]="appSettingsService.darkMode$ | async" (darkModeChange)="appSettingsService.darkMode$.next($event)"></light-dark-mode>

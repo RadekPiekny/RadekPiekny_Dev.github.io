@@ -4,12 +4,14 @@
     --Dark-Nav-BG-Active: rgb(55,55,55);
     --Dark-Font-Color: rgb(200,200,200);
     --Dark-Element-BG-Color: rgb(66,66,66);
+    --Dark-Primary-Color: LIGHTSKYBLUE;
 
     --Light-Main-BG-Color: rgb(236, 236, 236);
     --Light-Nav-BG-Color: LIGHTSKYBLUE;
     --Light-Nav-BG-Active: rgb(200,200,200);
     --Light-Font-Color: rgb(40,40,40);
     --Light-Element-BG-Color: rgb(212, 212, 212);
+    --Light-Primary-Color: LIGHTSKYBLUE;
     --nav-height: 3rem;
 }
 .light {
@@ -18,6 +20,7 @@
     --Nav-BG-Active: var(--Light-Nav-BG-Active);
     --Font-Color: var(--Light-Font-Color);
     --Element-BG-Color: var(--Light-Element-BG-Color);
+    --Primary-Color: var(--Light-Primary-Color);
 }
 .dark {
     --Main-BG-Color: var(--Dark-Main-BG-Color);
@@ -25,6 +28,7 @@
     --Nav-BG-Active: var(--Dark-Nav-BG-Active);
     --Font-Color: var(--Dark-Font-Color);
     --Element-BG-Color: var(--Dark-Element-BG-Color);
+    --Primary-Color: var(--Dark-Primary-Color);
 }
 html,body {
     margin: 0;
