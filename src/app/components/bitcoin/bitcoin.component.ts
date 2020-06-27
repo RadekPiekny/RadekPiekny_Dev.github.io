@@ -15,12 +15,22 @@ export class BitcoinComponent implements OnInit {
   connection: boolean = true;
   showShape: boolean = false;
   showFPS: boolean = false;
-  nodeSizeMin: number = 0.2;
-  nodeSizeMax: number = 0.5;
+
+  nodeSizeMin: number = 0.6;
+  nodeSizeMax: number = 1.2;
+
+  velocityFrom: number = 0.2;
+  velocityTo: number = 0.4;
+
   devicePixelRatio: number;
-  canvasWidth: number = 600;
-  canvasHeight: number = 600;
-  nodesCount: number = 600;
+
+  bitcoinDrawWidth: number = 425;
+  bitcoinDrawHeight: number = 600;
+
+  canvasWidth: number = 212;
+  canvasHeight: number = 300;
+
+  nodesCount: number = 300;
   pixelData = [];
   backgroundColor: string;
   nodeColor: string;
@@ -70,12 +80,16 @@ export class BitcoinComponent implements OnInit {
   }
 
   setupCanvas(canvas: ElementRef<HTMLCanvasElement>) {
-    let devicePixelRatio = window.devicePixelRatio || 1;
-    canvas.nativeElement.width = this.canvasWidth;
-    canvas.nativeElement.height = this.canvasHeight;
+    this.devicePixelRatio = window.devicePixelRatio || 1;
+
+    canvas.nativeElement.width = this.canvasWidth * this.devicePixelRatio;
+    canvas.nativeElement.height = this.canvasHeight * this.devicePixelRatio;
+    canvas.nativeElement.style.width = (this.canvasWidth).toString() + "px";
+    canvas.nativeElement.style.height = (this.canvasHeight).toString() + "px";
+
     this.maxLineDistance = 0.04 * this.canvasHeight;
     let canvas_context = this.canvas.nativeElement.getContext('2d');
-    canvas_context.scale(devicePixelRatio, devicePixelRatio);
+    canvas_context.scale(this.devicePixelRatio, this.devicePixelRatio);
     return canvas_context;
   }
 
@@ -83,8 +97,9 @@ export class BitcoinComponent implements OnInit {
     this.nodeConnectionLineColor = this.nodeColorRGB();
     this.ctx = this.setupCanvas(this.canvas);
     this.ctx.fillStyle = this.backgroundColor;
+    
     this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
-    this.drawBitcoin();
+    this.drawBitcoin2();
     this.getAllPixelArr();
     this.getAllPixelData();
     this.newNodes(this.nodesCount);
@@ -127,9 +142,9 @@ export class BitcoinComponent implements OnInit {
         newNode.x = this.getRandomIntNumber(0,this.canvasWidth);
         newNode.y = this.getRandomIntNumber(0,this.canvasHeight);
       }
-      while (this.isInShapeff(newNode.x, newNode.y) == false);
+      while (this.isInBitcoin(newNode,newNode.x, newNode.y) == false);
       newNode.r = this.getRandomNumber(this.nodeSizeMin,this.nodeSizeMax);
-      newNode.velocity = this.getRandomNumber(0.4,1);
+      newNode.velocity = this.getRandomNumber(this.velocityFrom,this.velocityTo);
       newNode.dir_x = this.getRandomNumber(-1,1) * newNode.velocity;
       newNode.dir_y = this.getRandomNumber(-1,1) * newNode.velocity;
       this.nodes.push(newNode);
@@ -183,7 +198,7 @@ export class BitcoinComponent implements OnInit {
     this.ctx.fillStyle = getComputedStyle(this.hostElement.nativeElement).backgroundColor;
     this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
     if (this.showShape) {
-      this.drawBitcoin();
+      this.drawBitcoin2();
     }
     if (this.showFPS) {
       this.drawFPS();
@@ -196,17 +211,20 @@ export class BitcoinComponent implements OnInit {
       case "loopMethodForEach":
         this.moveNodes_loopMethodForEach();
         break;
-      case "loopMethodForXinY":
-        break;
       default:
         this.moveNodes_loopMethodFor();
+        break;
     }
   }
 
   moveNodes_loopMethodFor(){
+    let x: number;
+    let y: number;
     for (let index = 0; index < this.nodes.length; index++) {
       this.ctx.beginPath();
-      if (this.isInShapeff(this.nodes[index].x + this.nodes[index].dir_x * this.nodes[index].velocity, this.nodes[index].y + this.nodes[index].dir_y * this.nodes[index].velocity)) {
+      x = this.nodes[index].x + this.nodes[index].dir_x * this.nodes[index].velocity;
+      y = this.nodes[index].y + this.nodes[index].dir_y * this.nodes[index].velocity;
+      if (this.isInBitcoin(this.nodes[index],x, y)) {
         this.nodes[index].x += this.nodes[index].dir_x * this.nodes[index].velocity;
         this.nodes[index].y += this.nodes[index].dir_y * this.nodes[index].velocity;
       } else {
@@ -232,11 +250,22 @@ export class BitcoinComponent implements OnInit {
     }
   }
 
+  newDirection(circle: Node, newDirX: number, newDirY: number): boolean {
+    if (circle.x + newDirX < 0 || circle.y + newDirY < 0) {
+      return false;
+    }
+    return this.isInBitcoin(circle, circle.x + newDirX, circle.y + newDirY);
+  }
+
   moveNodes_loopMethodForEach(){
+    let x: number;
+    let y: number;
     this.nodes.forEach(
       node => {
         this.ctx.beginPath();
-        if (this.isInShapeff(node.x + node.dir_x * node.velocity, node.y + node.dir_y * node.velocity)) {
+        x = node.x + node.dir_x * node.velocity;
+        y = node.y + node.dir_y * node.velocity;
+        if (this.isInBitcoin(node, x, y)) {
           node.x += node.dir_x * node.velocity;
           node.y += node.dir_y * node.velocity;
         } else {
@@ -263,11 +292,11 @@ export class BitcoinComponent implements OnInit {
   }
 
   drawBitcoin() {
-    let blockWidth: number = 0.666 * this.canvasWidth * 0.08;
+    let blockWidth: number = 1.56 * this.canvasWidth / this.devicePixelRatio * 0.08;
     let blockHeight: number = blockWidth * 1.5;
     let topLeftBlockPositionX: number = 0.5 * this.canvasWidth -  3.5 * blockWidth / 2;
     let topRightBlockPositionX: number = topLeftBlockPositionX + 2 * blockWidth;
-    let topBlocksPositionY = 0.21 * this.canvasHeight;
+    let topBlocksPositionY = 0.15 * this.canvasHeight;
 
     let botLeftBlockPositionX: number = topLeftBlockPositionX;
     let botRightBlockPositionX: number = topRightBlockPositionX;
@@ -281,10 +310,61 @@ export class BitcoinComponent implements OnInit {
     this.ctx.rect(botRightBlockPositionX,botBlockcPositionY, blockWidth, blockHeight);
     this.ctx.fill();
     this.ctx.closePath();
-    this.ctx.font = "100 " + 0.666 * this.canvasWidth + "px Arial";
+    this.ctx.font = this.canvasWidth * 0.8 + "px Arial";
     this.ctx.textAlign = "center";
     this.ctx.fillStyle = "rgb(103,0,0)";
-    this.ctx.fillText("B", 0.5 * this.canvasWidth, 0.76 * this.canvasHeight );
+    this.ctx.fillText("B", 0.5 * this.canvasWidth, 0.8 * this.canvasHeight );
+  }
+
+  drawBitcoin2() {
+    let ratioX: number = this.canvasWidth / this.bitcoinDrawWidth;
+    let ratioY: number = this.canvasHeight / this.bitcoinDrawHeight;
+
+    this.ctx.beginPath();
+    this.ctx.moveTo(25,525 * ratioY);
+    this.ctx.lineTo(25,475 * ratioY);
+    this.ctx.lineTo(75 * ratioX,475 * ratioY);
+    this.ctx.lineTo(75 * ratioX,125 * ratioY);
+    this.ctx.lineTo(25,125 * ratioY);
+    this.ctx.lineTo(25,75 * ratioY);
+    this.ctx.lineTo(100 * ratioX,75 * ratioY);
+    this.ctx.lineTo(100 * ratioX,25 * ratioY);
+    this.ctx.lineTo(170 * ratioX,25 * ratioY);
+    this.ctx.lineTo(170 * ratioX,75 * ratioY);
+    this.ctx.lineTo(205 * ratioX,75 * ratioY);
+    this.ctx.lineTo(205 * ratioX,25 * ratioY);
+    this.ctx.lineTo(275 * ratioX,25 * ratioY);
+    this.ctx.lineTo(275 * ratioX,75 * ratioY);
+    this.ctx.arc(275 * ratioX, 200 * ratioY, 125 * ratioX, this.degToRad(-90), this.degToRad(90), false);
+    this.ctx.arc(275 * ratioX, 400 * ratioY, 125 * ratioX, this.degToRad(-90), this.degToRad(90), false);
+    this.ctx.lineTo(275 * ratioX,575 * ratioY);
+    this.ctx.lineTo(205 * ratioX,575 * ratioY);
+    this.ctx.lineTo(205 * ratioX,525 * ratioY);
+    this.ctx.lineTo(170 * ratioX,525 * ratioY);
+    this.ctx.lineTo(170 * ratioX,575 * ratioY);
+    this.ctx.lineTo(100 * ratioX,575 * ratioY);
+    this.ctx.lineTo(100 * ratioX,525 * ratioY);
+    this.ctx.lineTo(25,525 * ratioY);
+
+    this.ctx.moveTo(150 * ratioX,450 * ratioY);
+    this.ctx.lineTo(275 * ratioX,450 * ratioY);
+    this.ctx.arc(275 * ratioX, 400 * ratioY, 50 * ratioX, this.degToRad(90), this.degToRad(270), true);
+    this.ctx.lineTo(150 * ratioX,350 * ratioY);
+    this.ctx.lineTo(150 * ratioX,450 * ratioY);
+
+    this.ctx.moveTo(150 * ratioX,250 * ratioY);
+    this.ctx.lineTo(275 * ratioX,250 * ratioY);
+    this.ctx.arc(275 * ratioX, 200 * ratioY, 50 * ratioX, this.degToRad(90), this.degToRad(270), true);
+    this.ctx.lineTo(150 * ratioX,150 * ratioY);
+    this.ctx.lineTo(150 * ratioX,250 * ratioY);
+
+    this.ctx.fillStyle = "rgb(103,0,0)";
+    this.ctx.fill();
+    this.ctx.closePath();
+  }
+
+  degToRad(deg: number): number {
+    return Math.PI / 180 * deg;
   }
 
   drawFPS() {
@@ -318,11 +398,11 @@ export class BitcoinComponent implements OnInit {
     return true;
   }
 
-  isInShapeff(x: number,y: number): boolean {
-    if (this.pixelData[Math.floor(x)][Math.floor(y)]) {
-      return true;
+  isInBitcoin(node: Node, x: number,y: number): boolean {
+    if (x < 0 || y / 2 < 0 || x / 2 > this.canvasWidth || y / 2 > this.canvasHeight) {
+      return false;
     }
-    return false;
+    return this.pixelData[Math.floor(x)][Math.floor(y)];
   }
 
   jsonCopy(src: Object) {
@@ -486,9 +566,7 @@ export class BitcoinComponent implements OnInit {
     }
   }
 
-  newDirection(circle: Node, newDirX: number, newDirY: number): boolean {
-    return this.isInShapeff(circle.x + newDirX, circle.y + newDirY);
-  }
+
 
 }
 

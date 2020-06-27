@@ -8,8 +8,8 @@ import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 export class LightningCanvasComponent implements OnInit {
   @ViewChild('canvas', {static: true}) canvas: ElementRef<HTMLCanvasElement>;
   ctx: CanvasRenderingContext2D;
-  canvasWidth: number;
-  canvasHeight: number;
+  canvasWidth: number = 300;
+  canvasHeight: number = 300;
 
   constructor() { }
 
@@ -21,12 +21,12 @@ export class LightningCanvasComponent implements OnInit {
   }
 
   setupCanvas(canvas: ElementRef<HTMLCanvasElement>) {
-    let devicePixelRatio = window.devicePixelRatio || 1;
+    let devicePixelRatio = window.devicePixelRatio;
     var rect = this.canvas.nativeElement.getBoundingClientRect();
-    canvas.nativeElement.width = rect.width * devicePixelRatio;
-    canvas.nativeElement.height = rect.height * devicePixelRatio;
-    this.canvasWidth = canvas.nativeElement.width;
-    this.canvasHeight = canvas.nativeElement.height;
+    canvas.nativeElement.width = this.canvasWidth *devicePixelRatio;
+    canvas.nativeElement.height = this.canvasWidth *devicePixelRatio;
+    canvas.nativeElement.style.width = (this.canvasWidth).toString() + "px";
+    canvas.nativeElement.style.height = (this.canvasWidth).toString() + "px";
     let canvas_context = this.canvas.nativeElement.getContext('2d');
     canvas_context.scale(devicePixelRatio, devicePixelRatio);
     return canvas_context;
