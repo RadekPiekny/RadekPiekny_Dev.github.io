@@ -16,11 +16,11 @@ export class BitcoinComponent implements OnInit {
   showShape: boolean = false;
   showFPS: boolean = false;
 
-  nodeSizeMin: number = 0.6;
-  nodeSizeMax: number = 1.2;
+  nodeSizeMin: number = 0.9;
+  nodeSizeMax: number = 1.5;
 
-  velocityFrom: number = 0.2;
-  velocityTo: number = 0.4;
+  velocityFrom: number = 0.5;
+  velocityTo: number = 0.5;
 
   devicePixelRatio: number;
 
@@ -30,7 +30,7 @@ export class BitcoinComponent implements OnInit {
   canvasWidth: number = 212;
   canvasHeight: number = 300;
 
-  nodesCount: number = 300;
+  nodesCount: number = 800;
   pixelData = [];
   backgroundColor: string;
   nodeColor: string;
@@ -52,6 +52,7 @@ export class BitcoinComponent implements OnInit {
   countToUpdate: number = 0;
 
   lineWidth: number = 0.3;
+  maxLineDistanceRelative: number = 0.07;
   maxLineDistance: number;
 
   nodes = [];
@@ -87,7 +88,7 @@ export class BitcoinComponent implements OnInit {
     canvas.nativeElement.style.width = (this.canvasWidth).toString() + "px";
     canvas.nativeElement.style.height = (this.canvasHeight).toString() + "px";
 
-    this.maxLineDistance = 0.04 * this.canvasHeight;
+    this.maxLineDistance = this.maxLineDistanceRelative * this.canvasHeight;
     let canvas_context = this.canvas.nativeElement.getContext('2d');
     canvas_context.scale(this.devicePixelRatio, this.devicePixelRatio);
     return canvas_context;
@@ -163,15 +164,7 @@ export class BitcoinComponent implements OnInit {
     return Math.floor(Math.random() * (max - min+1) + min);
   }
 
-  getNodesDistance(node1: Node, node2: Node): number {
-    let distance: number;
-    let x2: number;
-    let y2: number;
-    x2 = Math.pow(Math.abs(node2.x - node1.x),2);
-    y2 = Math.pow(Math.abs(node2.y - node1.y),2);
-    distance = Math.floor(Math.sqrt(x2 + y2));
-    return distance;
-  }
+  
 
   animate() {
     this.moveNodes();
@@ -317,8 +310,8 @@ export class BitcoinComponent implements OnInit {
   }
 
   drawBitcoin2() {
-    let ratioX: number = this.canvasWidth / this.bitcoinDrawWidth;
-    let ratioY: number = this.canvasHeight / this.bitcoinDrawHeight;
+    let ratioX: number = this.canvasWidth / this.bitcoinDrawWidth / this.devicePixelRatio;
+    let ratioY: number = this.canvasHeight / this.bitcoinDrawHeight / this.devicePixelRatio;
 
     this.ctx.beginPath();
     this.ctx.moveTo(25,525 * ratioY);
@@ -327,23 +320,24 @@ export class BitcoinComponent implements OnInit {
     this.ctx.lineTo(75 * ratioX,125 * ratioY);
     this.ctx.lineTo(25,125 * ratioY);
     this.ctx.lineTo(25,75 * ratioY);
-    this.ctx.lineTo(100 * ratioX,75 * ratioY);
-    this.ctx.lineTo(100 * ratioX,25 * ratioY);
-    this.ctx.lineTo(170 * ratioX,25 * ratioY);
-    this.ctx.lineTo(170 * ratioX,75 * ratioY);
-    this.ctx.lineTo(205 * ratioX,75 * ratioY);
-    this.ctx.lineTo(205 * ratioX,25 * ratioY);
-    this.ctx.lineTo(275 * ratioX,25 * ratioY);
-    this.ctx.lineTo(275 * ratioX,75 * ratioY);
+    this.ctx.lineTo(120 * ratioX,75 * ratioY);
+    this.ctx.lineTo(120 * ratioX,15 * ratioY);
+    this.ctx.lineTo(190 * ratioX,15 * ratioY);
+    this.ctx.lineTo(190 * ratioX,75 * ratioY);
+    this.ctx.lineTo(240 * ratioX,75 * ratioY);
+    this.ctx.lineTo(240 * ratioX,15 * ratioY);
+    this.ctx.lineTo(310 * ratioX,15 * ratioY);
+    this.ctx.lineTo(310 * ratioX,90 * ratioY);
     this.ctx.arc(275 * ratioX, 200 * ratioY, 125 * ratioX, this.degToRad(-90), this.degToRad(90), false);
     this.ctx.arc(275 * ratioX, 400 * ratioY, 125 * ratioX, this.degToRad(-90), this.degToRad(90), false);
-    this.ctx.lineTo(275 * ratioX,575 * ratioY);
-    this.ctx.lineTo(205 * ratioX,575 * ratioY);
-    this.ctx.lineTo(205 * ratioX,525 * ratioY);
-    this.ctx.lineTo(170 * ratioX,525 * ratioY);
-    this.ctx.lineTo(170 * ratioX,575 * ratioY);
-    this.ctx.lineTo(100 * ratioX,575 * ratioY);
-    this.ctx.lineTo(100 * ratioX,525 * ratioY);
+    this.ctx.lineTo(310 * ratioX,500 * ratioY);
+    this.ctx.lineTo(310 * ratioX,585 * ratioY);
+    this.ctx.lineTo(240 * ratioX,585 * ratioY);
+    this.ctx.lineTo(240 * ratioX,525 * ratioY);
+    this.ctx.lineTo(190 * ratioX,525 * ratioY);
+    this.ctx.lineTo(190 * ratioX,585 * ratioY);
+    this.ctx.lineTo(120 * ratioX,585 * ratioY);
+    this.ctx.lineTo(120 * ratioX,525 * ratioY);
     this.ctx.lineTo(25,525 * ratioY);
 
     this.ctx.moveTo(150 * ratioX,450 * ratioY);
@@ -496,14 +490,15 @@ export class BitcoinComponent implements OnInit {
       }
       distance = this.getNodesDistance(c, node)
       if (distance < this.maxLineDistance) {
-        this.ctx.beginPath();
         this.ctx.strokeStyle = this.nodeConnectionLineColor;
         this.ctx.moveTo(c.x, c.y);
         this.ctx.lineTo(node.x,node.y);
-        this.ctx.lineWidth = this.lineWidth;
-        this.ctx.stroke();
       }
     })
+  }
+
+  getNodesDistance(node1: Node, node2: Node): number {
+    return Math.floor(Math.sqrt(Math.pow(Math.abs(node2.x - node1.x),2) + Math.pow(Math.abs(node2.y - node1.y),2)));
   }
 
   getAllPixelArr() {
