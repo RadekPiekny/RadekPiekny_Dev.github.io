@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { AppSettingsService } from 'src/app/services/appSettings.service';
-import { interval } from 'rxjs';
+import { interval, Subscription } from 'rxjs';
 import { tap, switchMap, take, skip } from 'rxjs/operators';
 
 @Component({
@@ -9,6 +9,8 @@ import { tap, switchMap, take, skip } from 'rxjs/operators';
   styleUrls: ['./bitcoin.component.css']
 })
 export class BitcoinComponent implements OnInit {
+  themeModeSubscription: Subscription;
+  exit: boolean = false;
   expandSelectionByPX: number = 0;
   zoomBounceWidth: number = 50;
   zoomBounceHeight: number = 50;
@@ -36,12 +38,6 @@ export class BitcoinComponent implements OnInit {
   nodeColor: string;
   nodeConnectionLineOpacity = 0.1;
   nodeConnectionLineColor: string;
-
-  loopMethods: string[] = [
-    "loopMethodFor",
-    "loopMethodForEach"
-  ]
-  loopMethodCurrent: string = "loopMethodFor";
 
   fps: number;
   frameTime: number;
@@ -72,14 +68,6 @@ export class BitcoinComponent implements OnInit {
     //this.zone.runOutsideAngular(() => { requestAnimationFrame(() => {}); });
   };
 
-  loopMethodChange() {
-    let i = this.loopMethods.findIndex(x => x === this.loopMethodCurrent) + 1;
-    if (i === this.loopMethods.length) {
-      i = 0;
-    }
-    this.loopMethodCurrent = this.loopMethods[i];
-  }
-
   setupCanvas(canvas: ElementRef<HTMLCanvasElement>) {
     this.devicePixelRatio = window.devicePixelRatio || 1;
 
@@ -106,9 +94,9 @@ export class BitcoinComponent implements OnInit {
     this.newNodes(this.nodesCount);
     this.animate();
 
-    this.appSettingsService.darkMode$.pipe(
+    this.themeModeSubscription = this.appSettingsService.darkMode$.pipe(
       skip(1),
-      switchMap(() => interval(16).pipe(
+      switchMap(() => interval(30).pipe(
         take(20),
         tap(() => {
           this.nodeConnectionLineColor = this.nodeColorRGB();
@@ -118,6 +106,11 @@ export class BitcoinComponent implements OnInit {
         this.backgroundColor = getComputedStyle(this.hostElement.nativeElement).backgroundColor;
       }
     )
+  }
+
+  ngOnDestroy(): void {
+    this.exit = true;
+    this.themeModeSubscription.unsubscribe();
   }
 
   nodeColorRGB(): string {
@@ -167,8 +160,11 @@ export class BitcoinComponent implements OnInit {
   
 
   animate() {
-    this.moveNodes();
+    if (this.exit) {
+      return;
+    }
     if (this.running) {
+      this.moveNodes();
       this.calculateFPS();
       requestAnimationFrame(() => this.animate());
     }
@@ -197,17 +193,7 @@ export class BitcoinComponent implements OnInit {
       this.drawFPS();
     }
     this.drawNodesCount();
-    switch (this.loopMethodCurrent) {
-      case "loopMethodFor":
-        this.moveNodes_loopMethodFor();
-        break;
-      case "loopMethodForEach":
-        this.moveNodes_loopMethodForEach();
-        break;
-      default:
-        this.moveNodes_loopMethodFor();
-        break;
-    }
+    this.moveNodes_loopMethodFor();
   }
 
   moveNodes_loopMethodFor(){
@@ -248,65 +234,6 @@ export class BitcoinComponent implements OnInit {
       return false;
     }
     return this.isInBitcoin(circle, circle.x + newDirX, circle.y + newDirY);
-  }
-
-  moveNodes_loopMethodForEach(){
-    let x: number;
-    let y: number;
-    this.nodes.forEach(
-      node => {
-        this.ctx.beginPath();
-        x = node.x + node.dir_x * node.velocity;
-        y = node.y + node.dir_y * node.velocity;
-        if (this.isInBitcoin(node, x, y)) {
-          node.x += node.dir_x * node.velocity;
-          node.y += node.dir_y * node.velocity;
-        } else {
-          let newDirX: number;
-          let newDirY: number;
-          do {
-            newDirX = this.getRandomNumber(-1,1);
-            newDirY = this.getRandomNumber(-1,1);
-          } while (this.newDirection(node,newDirX,newDirY) == false);
-          node.dir_x = newDirX;
-          node.dir_y = newDirY;
-          node.x += node.dir_x
-          node.y += node.dir_y
-        }
-        if (this.connection) {
-          this.drawLines_loopMethodForEach(node);
-        };
-        this.ctx.arc(node.x, node.y, node.r, 0, Math.PI * 2, false);
-        this.ctx.fillStyle = this.nodeConnectionLineColor;
-        this.ctx.fill();
-        this.ctx.closePath();
-      }
-    )
-  }
-
-  drawBitcoin() {
-    let blockWidth: number = 1.56 * this.canvasWidth / this.devicePixelRatio * 0.08;
-    let blockHeight: number = blockWidth * 1.5;
-    let topLeftBlockPositionX: number = 0.5 * this.canvasWidth -  3.5 * blockWidth / 2;
-    let topRightBlockPositionX: number = topLeftBlockPositionX + 2 * blockWidth;
-    let topBlocksPositionY = 0.15 * this.canvasHeight;
-
-    let botLeftBlockPositionX: number = topLeftBlockPositionX;
-    let botRightBlockPositionX: number = topRightBlockPositionX;
-    let botBlockcPositionY: number = 0.75 * this.canvasHeight;
-
-    this.ctx.beginPath();
-    this.ctx.fillStyle="rgb(103,0,0)";
-    this.ctx.rect(topLeftBlockPositionX,topBlocksPositionY,blockWidth,blockHeight);
-    this.ctx.rect(topRightBlockPositionX,topBlocksPositionY,blockWidth,blockHeight);
-    this.ctx.rect(botLeftBlockPositionX,botBlockcPositionY, blockWidth, blockHeight);
-    this.ctx.rect(botRightBlockPositionX,botBlockcPositionY, blockWidth, blockHeight);
-    this.ctx.fill();
-    this.ctx.closePath();
-    this.ctx.font = this.canvasWidth * 0.8 + "px Arial";
-    this.ctx.textAlign = "center";
-    this.ctx.fillStyle = "rgb(103,0,0)";
-    this.ctx.fillText("B", 0.5 * this.canvasWidth, 0.8 * this.canvasHeight );
   }
 
   drawBitcoin2() {

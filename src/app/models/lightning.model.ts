@@ -37,3 +37,36 @@ export class RND {
     x: number;
     y: number;
 }
+
+//
+//
+//
+
+export interface ILightning {
+    id: number;
+    parentId?: number;
+    start: IPoint;
+    tendency: ITendency;
+    points: Point[];
+    startWidth: number;
+    endWidth: number;
+    height: number;
+    Chainlightning: ILightning[];
+    bezier: boolean;
+    animationSpeed: number;
+}
+
+export interface ITendency {
+    right: number;
+    left: number;
+}
+
+export interface IPoint {
+    x: number;
+    y: number;
+}
+
+export interface ILine {
+    p1: IPoint;
+    p2: IPoint;
+}

@@ -2,11 +2,11 @@ import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
-  selector: 'lightning-canvas',
-  templateUrl: './lightning-canvas.component.html',
-  styleUrls: ['./lightning-canvas.component.css']
+  selector: 'twister',
+  templateUrl: './twister.component.html',
+  styleUrls: ['./twister.component.css']
 })
-export class LightningCanvasComponent implements OnInit {
+export class TwisterComponent implements OnInit {
   @ViewChild('canvas', {static: true}) canvas: ElementRef<HTMLCanvasElement>;
   ctx: CanvasRenderingContext2D;
   canvasWidth: number = 300;
@@ -20,7 +20,7 @@ export class LightningCanvasComponent implements OnInit {
 
   ngOnInit(): void {
     this.ctx = this.setupCanvas(this.canvas);
-    this.ctx.fillStyle = "black";
+    this.ctx.fillStyle = "white";
     this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
     this.resetToDefault();
     this.drawLightning(0);
@@ -77,8 +77,8 @@ export class LightningCanvasComponent implements OnInit {
   drawShadow(x: number, y: number, r: number) {
 
     let grad = this.ctx.createRadialGradient(x,y,0,x,y,r);
-    grad.addColorStop(0,"rgba(255,255,255,0.2)");
-    grad.addColorStop(1,"rgba(255,255,255,0)");
+    grad.addColorStop(0,"rgba(0,0,0,1)");
+    grad.addColorStop(1,"rgba(255,255,255,1)");
     this.ctx.fillStyle = grad;
     this.ctx.arc(x,y,r,0, 2 * Math.PI);
     this.ctx.fill();

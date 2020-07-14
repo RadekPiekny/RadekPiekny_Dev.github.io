@@ -10,7 +10,10 @@ import { LightDarkModeComponent } from './components/light-dark-mode/light-dark-
 import { SkillRangeComponent } from './components/skill-range/skill-range.component';
 import { PlaygroundComponent } from './views/playground/playground.component';
 import { LightningCanvasComponent } from './components/lightning-canvas/lightning-canvas.component';
-import { ResumeViewComponent } from './views/resume-view/resume-view.component'
+import { ResumeViewComponent } from './views/resume-view/resume-view.component';
+import { LoadingComponent } from './components/loading/loading.component';
+import { TwisterComponent } from './components/twister/twister.component';
+
 
 @NgModule({
   declarations: [
@@ -22,7 +25,9 @@ import { ResumeViewComponent } from './views/resume-view/resume-view.component'
     SkillRangeComponent,
     PlaygroundComponent,
     LightningCanvasComponent,
-    ResumeViewComponent
+    ResumeViewComponent,
+    LoadingComponent,
+    TwisterComponent
   ],
   imports: [
     BrowserModule,
