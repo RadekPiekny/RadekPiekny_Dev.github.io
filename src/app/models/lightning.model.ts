@@ -45,20 +45,25 @@ export class RND {
 export interface ILightning {
     id: number;
     parentId?: number;
-    start: IPoint;
-    tendency: ITendency;
-    points: Point[];
-    startWidth: number;
-    endWidth: number;
-    height: number;
-    Chainlightning: ILightning[];
-    bezier: boolean;
-    animationSpeed: number;
+    pointOrigin: IPoint;
+    line: ILine[];
+    tendencyHorizontal: ITendencyHorizontal;
+    tendencyVertical: ITendencyVertical;
+    lineCount: number;
+    widthStart: number;
+    widthEnd: number;
+    lightningChain: ILightning[];
+    animationDuration: number;
 }
 
-export interface ITendency {
+export class ITendencyHorizontal {
     right: number;
     left: number;
+}
+
+export class ITendencyVertical {
+    top: number;
+    bottom: number;
 }
 
 export interface IPoint {
@@ -69,4 +74,5 @@ export interface IPoint {
 export interface ILine {
     p1: IPoint;
     p2: IPoint;
+    width: number;
 }
