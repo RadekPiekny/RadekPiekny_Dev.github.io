@@ -53,7 +53,12 @@ export interface ILightning {
     widthStart: number;
     widthEnd: number;
     lightningChain: ILightning[];
+    lastLinePaint: number;
     animationDuration: number;
+    channelAnimation: boolean;
+    duration: number;
+    cyclePerFrame: number;
+    startTime: number;
 }
 
 export class ITendencyHorizontal {
