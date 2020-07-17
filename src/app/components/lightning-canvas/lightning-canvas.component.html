@@ -1,1 +1,6 @@
-<canvas #canvas width="300" height="300" (click)="thunderStorm()"></canvas>
+<canvas #canvas (click)="thunderStorm()"></canvas>
+<br><button (click)="canvasPaint()">paint</button>
+<br><button (click)="canvasPaintOnce()">Paint Once</button>
+
+<br>lightnings: {{lightnings.length}}
+<br>paintFrame: {{paintFrame}}
