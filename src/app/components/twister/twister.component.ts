@@ -1,3 +1,4 @@
+import { Twister, TwisterPart } from './../../models/twister.model';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
@@ -9,97 +10,124 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 export class TwisterComponent implements OnInit {
   @ViewChild('canvas', {static: true}) canvas: ElementRef<HTMLCanvasElement>;
   ctx: CanvasRenderingContext2D;
-  canvasWidth: number = 300;
-  canvasHeight: number = 300;
-  initialX: number;
-  initialY: number;
-  newX: number;
-  newY: number;
+  canvasWidth: number = 600;
+  canvasHeight: number = 600;
+  twister: Twister[] = [];
 
   constructor() { }
 
   ngOnInit(): void {
     this.ctx = this.setupCanvas(this.canvas);
-    this.ctx.fillStyle = "white";
-    this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
-    this.resetToDefault();
-    this.drawLightning(0);
+
   }
 
   setupCanvas(canvas: ElementRef<HTMLCanvasElement>) {
     let devicePixelRatio = window.devicePixelRatio;
-    var rect = this.canvas.nativeElement.getBoundingClientRect();
+    var rect = canvas.nativeElement.getBoundingClientRect();
     canvas.nativeElement.width = this.canvasWidth *devicePixelRatio;
-    canvas.nativeElement.height = this.canvasWidth *devicePixelRatio;
+    canvas.nativeElement.height = this.canvasHeight *devicePixelRatio;
     canvas.nativeElement.style.width = (this.canvasWidth).toString() + "px";
-    canvas.nativeElement.style.height = (this.canvasWidth).toString() + "px";
-    let canvas_context = this.canvas.nativeElement.getContext('2d');
+    canvas.nativeElement.style.height = (this.canvasHeight).toString() + "px";
+    let canvas_context = canvas.nativeElement.getContext('2d');
     canvas_context.scale(devicePixelRatio, devicePixelRatio);
     return canvas_context;
   }
 
-  resetToDefault() {
-    this.initialY = 0;
-    this.initialX = 100;
+  draw() {
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+    this.ctx.fillStyle = "green";
+    this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
-    this.newX = this.initialX;
-    this.newY = this.initialY;
+    this.twister.forEach(t=> {
+      this.drawTwister(t);
+      this.moveTwister();
+    })
+
+    requestAnimationFrame(() => this.draw());
   }
 
-  drawLightning(i: number = 0) {
-    this.ctx.beginPath();
-    this.ctx.lineWidth = 3 - i*0.1;
-    this.ctx.strokeStyle = "rgba(255,255,255,1)";
-    this.ctx.moveTo(this.initialX,this.initialY);
-
-    this.newX = this.initialX + this.getRandomIntNegativeNumber(-10,10);
-    this.newY = i*10;
-
-    this.ctx.lineTo(this.newX, this.newY);
-    this.ctx.stroke();
-    this.ctx.closePath()
-    this.drawShadow((this.initialX+this.newX)/2,(this.initialY+this.newY)/2,this.ctx.lineWidth*10);
-    this.initialX = this.newX;
-    this.initialY = this.newY;
-    if (i>33) {
-      return;
+  generateTwister(t?: Twister) {
+    if (t) {
+      this.twister.push(t);
     }
-    this.newX = this.initialX;
-    this.newY = this.initialY;
-    requestAnimationFrame(() => this.drawLightning(i+1));
+    this.twister.push(this.generateDefaultTwister());
   }
 
-  drawNewLightning() {
-    this.resetToDefault();
-    this.drawLightning();
+  generateDefaultTwister(): Twister {
+    let t: Twister = new Twister;
+    t.tendencyLeft = -3;
+    t.tendencyRight = 6;
+    t.partCount = 60;
+    t.topMaxWidth = 100;
+    t.bottomMaxWidth = 5;
+    t.topStartX = 250;
+    t.topStartY = 150;
+    for (let i = 0; i < t.partCount; i++) {
+      t.part.push(this.generateDefaultTwisterPart(t,i))
+    }
+    //t.part.reverse();
+    return t;
   }
 
-  drawShadow(x: number, y: number, r: number) {
+  generateDefaultTwisterPart(t: Twister,i: number): TwisterPart {
+    let result: TwisterPart = new TwisterPart;
+    let diff: number = (t.topMaxWidth - t.bottomMaxWidth) / t.partCount;
 
-    let grad = this.ctx.createRadialGradient(x,y,0,x,y,r);
-    grad.addColorStop(0,"rgba(0,0,0,1)");
-    grad.addColorStop(1,"rgba(255,255,255,1)");
-    this.ctx.fillStyle = grad;
-    this.ctx.arc(x,y,r,0, 2 * Math.PI);
-    this.ctx.fill();
-    this.ctx.closePath();
-    this.ctx.filter = "none";
+    result.colorStart = "rgba(0,0,0,1)";
+    result.colorEnd = "rgba(255,255,255,0.6)";
+    result.scaleHorizontal = 1;
+    result.skewHorizontal = 0;
+    result.skewVertical = 0;
+    result.scaleVertical = 0.3;
+    result.moveHorizontal = -1 * i * diff;
+    result.moveVertical = 0;
+    result.r = t.topMaxWidth - diff * i ;
+    result.x = t.topStartX + this.getRandomIntNegativeNumber(t.tendencyLeft,t.tendencyRight) - diff * i;
+    result.y = t.topStartY + i*10;
+
+    return result;
   }
 
-  drawLine() {
-    this.ctx.moveTo(20,0);
-    this.ctx.fillStyle = 'red';
-    this.ctx.lineWidth = 10;
-    this.ctx.shadowColor = "rgba(255,0,0,1)";
-    this.ctx.shadowBlur = 5;
-    this.ctx.shadowOffsetX = 0;
-    this.ctx.shadowOffsetY = 0;
-    this.ctx.lineTo(30, 300);
-    this.ctx.stroke();
+  moveTwister(){
+    this.twister.forEach(t=> {
+      t.movingJig = this.getRandomIntNumber(-2,2);
+      t.part.forEach(p => {
+        p.x += 1 + t.movingJig;
+      })
+    })
   }
 
+  drawTwister(t: Twister) {
+    t.part.forEach(p => {
+      this.ctx.beginPath();
+      let grad = this.ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
+      grad.addColorStop(0,p.colorStart);
+      grad.addColorStop(1,p.colorEnd);
+      this.ctx.fillStyle = grad;
+      this.ctx.arc(p.x,p.y,p.r,0, 2 * Math.PI,false);
+      this.ctx.setTransform(
+        p.scaleHorizontal,
+        p.skewHorizontal,
+        p.skewVertical,
+        p.scaleVertical,
+        p.moveHorizontal,
+        p.moveVertical
+      );
+      this.ctx.fill();
+      this.ctx.closePath();
+      this.ctx.filter = "none";
+    })
+  }
+
+  getRandomNumber(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+  getRandomIntNumber(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+  }
   getRandomIntNegativeNumber(min, max) {
     return Math.floor(Math.random() * (max - min+1) + min);
   }
+
 
 }

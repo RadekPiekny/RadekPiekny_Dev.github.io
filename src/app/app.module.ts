@@ -13,6 +13,7 @@ import { LightningCanvasComponent } from './components/lightning-canvas/lightnin
 import { ResumeViewComponent } from './views/resume-view/resume-view.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { TwisterComponent } from './components/twister/twister.component';
+import { LightningWebglComponent } from './components/lightning-webgl/lightning-webgl.component';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { TwisterComponent } from './components/twister/twister.component';
     LightningCanvasComponent,
     ResumeViewComponent,
     LoadingComponent,
-    TwisterComponent
+    TwisterComponent,
+    LightningWebglComponent
   ],
   imports: [
     BrowserModule,

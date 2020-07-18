@@ -6,12 +6,14 @@ import { PlaygroundComponent } from './views/playground/playground.component';
 import { ResumeViewComponent } from './views/resume-view/resume-view.component';
 import { LightningCanvasComponent } from './components/lightning-canvas/lightning-canvas.component';
 import { TwisterComponent } from './components/twister/twister.component';
+import { LightningWebglComponent } from './components/lightning-webgl/lightning-webgl.component';
 
 const routes: Routes = [
   { path: 'resume', component: ResumeViewComponent },
   { path: 'bitcoin', component: BitcoinComponent },
   { path: 'lightning', component: LightningComponent },
   { path: 'lightning-canvas', component: LightningCanvasComponent },
+  { path: 'lightning-webgl', component: LightningWebglComponent },
   { path: 'twister', component: TwisterComponent },
   { path: 'playground', component: PlaygroundComponent }
 ];

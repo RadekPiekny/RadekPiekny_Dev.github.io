@@ -32,11 +32,11 @@ export class BitcoinComponent implements OnInit {
   canvasWidth: number = 212;
   canvasHeight: number = 300;
 
-  nodesCount: number = 800;
+  nodesCount: number = 1000;
   pixelData = [];
   backgroundColor: string;
   nodeColor: string;
-  nodeConnectionLineOpacity = 0.1;
+  nodeConnectionLineOpacity = 0.2;
   nodeConnectionLineColor: string;
 
   fps: number;
@@ -48,7 +48,7 @@ export class BitcoinComponent implements OnInit {
   countToUpdate: number = 0;
 
   lineWidth: number = 0.3;
-  maxLineDistanceRelative: number = 0.07;
+  maxLineDistanceRelative: number = 0.04;
   maxLineDistance: number;
 
   nodes = [];
@@ -405,6 +405,7 @@ export class BitcoinComponent implements OnInit {
         this.ctx.lineTo(node.x,node.y);
         this.ctx.lineWidth = this.lineWidth;
         this.ctx.stroke();
+        //this.ctx.closePath();
       }
     }
   }

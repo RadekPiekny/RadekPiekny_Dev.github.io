@@ -12,8 +12,8 @@ import { delay, tap } from 'rxjs/operators';
 export class LightningCanvasComponent implements OnInit {
   @ViewChild('canvas', {static: true}) canvas: ElementRef<HTMLCanvasElement>;
   ctx: CanvasRenderingContext2D;
-  canvasWidth: number = 500;
-  canvasHeight: number = 500;
+  canvasWidth: number = 300;
+  canvasHeight: number = 300;
 
   lightningID: number = 0;
 
@@ -84,7 +84,7 @@ export class LightningCanvasComponent implements OnInit {
   }
 
   thunderStorm() {
-    for (let index = 0; index < 1; index++) {
+    for (let index = 0; index < 5; index++) {
       this.generateNewLightning();
     }
   }
@@ -114,7 +114,7 @@ export class LightningCanvasComponent implements OnInit {
     } 
     let grad = this.ctx.createLinearGradient(l.pointOrigin.x, l.pointOrigin.y,l.line[l.lastLinePaint].p2.x,l.line[l.lastLinePaint].p2.y);
     grad.addColorStop(0,"rgba(0,0,255,1)");
-    grad.addColorStop(1,"rgba(255,255,255,1)");    
+    grad.addColorStop(1,"rgba(255,255,255,1)");
 
     for (let i = l.lastLinePaint; i < currentLastLinePaint; i++) {
       this.ctx.beginPath();
@@ -210,7 +210,7 @@ export class LightningCanvasComponent implements OnInit {
       lastLinePaint: 0,
       lightningChain: null,
       channelAnimation: true,
-      duration: _animationDuration + 5000,
+      duration: _animationDuration + 250,
       cyclePerFrame: null,
       startTime: Date.now()
     };
