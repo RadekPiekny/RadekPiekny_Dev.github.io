@@ -1,21 +1,25 @@
 export class Twister {
-    partCount: number;
-    part: TwisterPart[] = [];
+    sectionCount: number;
+    twisterSection: TwisterSection[] = [];
     topMaxWidth: number;
     bottomMaxWidth: number;
-    topStartX: number;
-    topStartY: number;
+    bottomPoint: IPoint;
     movingJig: number;
-    tendencyRight: number;
-    tendencyLeft: number;
-
+    sectionAngleMax: number;
+    sectionAngleMin: number;
+    sectionHeightMin: number;
+    sectionHeightMax: number;
+    changeSectionDirection: boolean;
+    points: IPoint[];
 }
 
 export class TwisterSection {
     angle: number;
     points: IPoint[];
+    part: TwisterPart[];
     bottom: IPoint;
     top: IPoint;
+    height: number;
     yDiff: number;
     xdiff: number;
 }
