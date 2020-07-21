@@ -1,6 +1,6 @@
 import { Twister, TwisterPart, TwisterSection } from './../../models/twister.model';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { IPoint } from 'src/app/models/lightning.model';
 
 @Component({
   selector: 'twister',
@@ -18,7 +18,37 @@ export class TwisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.ctx = this.setupCanvas(this.canvas);
-    this.generateLine();
+    this.twister.push(this.generateTwister());
+    this.twister.forEach(t => {
+      this.moveTwister(t);
+    })
+    
+  }
+
+  moveTwister(t: Twister) {
+    let corePoints: IPoint[] = this.newTwisterCorePoints(t);
+    this.changeTwisterCore(t,corePoints);
+  }
+
+  newTwisterCorePoints(t: Twister): IPoint[] {
+    let newT: Twister = new Twister;
+    newT.twisterSection = [];
+    t.twisterSection.forEach((ts,i) => {
+      newT.twisterSection.push(this.generateTwisterSection(t,i));
+    })
+    return this.generateTwisterPoints(newT);
+  }
+
+  changeTwisterCore(oldTwister: Twister, newCorePoints: IPoint[], i: number = 120) {
+    if (i == 0) {
+      return;
+    }
+    for (let i = 0; i < oldTwister.points.length; i++) {
+      let diff = (oldTwister.points[i].x - newCorePoints[i].x) / i;
+      oldTwister.points[i].x = newCorePoints[i].x + diff;
+    }
+    this.drawLine(oldTwister.points);
+    requestAnimationFrame(() => this.changeTwisterCore(oldTwister,newCorePoints,i-1))
   }
 
   setupCanvas(canvas: ElementRef<HTMLCanvasElement>) {
@@ -39,39 +69,68 @@ export class TwisterComponent implements OnInit {
     this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
     this.twister.forEach(t=> {
-      this.drawTwister(t);
-      this.moveTwister(t);
+      //this.drawTwister(t);
+      //this.moveTwister(t);
     })
 
     requestAnimationFrame(() => this.draw());
   }
 
-  generateTwister(t?: Twister) {
+  generateTwister(t?: Twister): Twister {
     if (t) {
       this.twister.push(t);
+    } else {
+      t = this.generateDefaultTwister();
     }
-    this.twister.push(this.generateDefaultTwister());
+    t.points = this.generateTwisterPoints(t);
+    return t;
   }
 
   generateDefaultTwister(): Twister {
     let t: Twister = new Twister;
-    t.partCount = 120;
+    t.sectionCount = 4;
     t.topMaxWidth = 100;
     t.bottomMaxWidth = 40;
-    t.topStartX = 250;
-    t.topStartY = 150;
-    t.tendencyLeft = -3;
-    t.tendencyRight = 6;
-    for (let i = 0; i < t.partCount; i++) {
-      t.part.push(this.generateDefaultTwisterPart(t,i))
+    t.bottomPoint = {x: 250, y: 600};
+    t.sectionAngleMin = 75;
+    t.sectionAngleMax = 105;
+    t.sectionHeightMin = 50;
+    t.sectionHeightMax = 50;
+
+    for (let i = 0; i < t.sectionCount; i++) {
+      t.twisterSection.push(this.generateTwisterSection(t,i))
     }
-    //t.part.reverse();
     return t;
+  }
+
+  generateTwisterPoints(t: Twister): IPoint[] {
+    let result: IPoint[] = [];
+    t.twisterSection.forEach(ts => {
+      ts.points.forEach(p => {
+        result.push(p);
+      })
+    })
+    return result;
+  }
+
+  generateTwisterSection(t: Twister, i: number): TwisterSection {
+    let result: TwisterSection = new TwisterSection;
+    let bottom: IPoint = 
+    {
+      x: i == 0 ? t.bottomPoint.x : t.twisterSection[i - 1].points[t.twisterSection[i - 1].points.length - 1].x,
+      y: i == 0 ? t.bottomPoint.y : t.twisterSection[i - 1].points[t.twisterSection[i - 1].points.length - 1].y
+    }
+    result.bottom = bottom;
+    result.angle = this.getRandomIntNumber(t.sectionAngleMin,t.sectionAngleMax);
+    result.height = this.getRandomIntNumber(t.sectionHeightMin,t.sectionHeightMax);
+    result.yDiff = 5;
+    result.points = this.generatePoints(result);
+    return result;
   }
 
   generateDefaultTwisterPart(t: Twister,i: number): TwisterPart {
     let result: TwisterPart = new TwisterPart;
-    let diff: number = (t.topMaxWidth - t.bottomMaxWidth) / t.partCount;
+    let diff: number = (t.topMaxWidth - t.bottomMaxWidth) / t.twisterSection.length;
 
     result.colorStart = "rgba(0,0,0,1)";
     result.colorEnd = "rgba(255,255,255,0.6)";
@@ -82,25 +141,18 @@ export class TwisterComponent implements OnInit {
     result.moveHorizontal = 0;//-1 * i * diff;
     result.moveVertical = 0;
 
-    if (Math.random() > 0.9) {
-      t.tendencyLeft = this.getRandomIntNegativeNumber(-5,5);
-      t.tendencyRight = t.tendencyLeft + 5;
-    }
-    result.tendencyLeft = t.tendencyLeft;
-    result.tendencyRight = t.tendencyRight;
-
     result.r = t.topMaxWidth - diff * i ;
     if (i > 0) {
-      result.x = t.part[i-1].x + this.getRandomIntNegativeNumber(result.tendencyLeft,result.tendencyRight);
+      //result.x = t.part[i-1].x + this.getRandomIntNegativeNumber(result.tendencyLeft,result.tendencyRight);
     } else {
-      result.x = t.topStartX + this.getRandomIntNegativeNumber(result.tendencyLeft,result.tendencyRight);
+      //result.x = t.topStartX + this.getRandomIntNegativeNumber(result.tendencyLeft,result.tendencyRight);
     }
-    result.y = t.topStartY + i*10;
+    //result.y = t.topStartY + i*10;
 
     return result;
   }
 
-  moveTwister(t: Twister){
+  /*moveTwister(t: Twister){
     let rnd: number = this.getRandomIntNumber(0,t.partCount);
     let rndCount: number = this.getRandomIntNumber(5,15);
     if (rnd + rndCount > t.partCount) {
@@ -120,10 +172,10 @@ export class TwisterComponent implements OnInit {
       t.part[i].tendencyRight = t.tendencyRight;
       t.part[i].x += this.getRandomIntNegativeNumber(t.tendencyLeft,t.tendencyRight);
     }
-  }
+  }*/
 
-  drawTwister(t: Twister) {
-    t.part.forEach(p => {
+  /*drawTwister(t: Twister) {
+    t.twisterSection.forEach(p => {
       let jigg: number = this.getRandomIntNegativeNumber(-1,1);
       this.ctx.beginPath();
       let rnd: number = +this.getRandomIntNegativeNumber(-2,2);
@@ -144,32 +196,48 @@ export class TwisterComponent implements OnInit {
       this.ctx.closePath();
       this.ctx.filter = "none";
     })
-  }
+  }*/
 
-  generateLine(n: number = 30) {
-    let ts: TwisterSection = new TwisterSection;
-    ts.angle = 182;
-    ts.points = [];
-    ts.bottom = {x: 300, y: 400};
-    ts.yDiff = 10;
-    let b: number = ts.yDiff * n;
-    let c: number = b / Math.tan(this.degrees_to_radians(ts.angle));
-    console.log(c);
-    ts.xdiff = c / n;
-    for (let i = 0; i < n; i++) {
-      ts.points.push({
+  generatePoints(ts: TwisterSection): IPoint[] {
+
+    let a: number;
+    let pointCount: number;
+    let result: IPoint[] = [];
+
+    switch (ts.angle) {
+      case 0:
+        a = 0;
+        return null;
+      case 180:
+        a = 0;
+        return null;
+      default:
+        a = ts.height / Math.tan(this.degrees_to_radians(ts.angle));
+        break;
+    }
+
+    pointCount = ts.height / ts.yDiff;
+    if (pointCount < 1) {
+      return null;
+    }
+
+    ts.xdiff = a / pointCount;
+    for (let i = 0; i < pointCount; i++) {
+      result.push({
         x: ts.bottom.x + i * ts.xdiff,
         y: ts.bottom.y - i * ts.yDiff
       })
     }
-
-    this.drawLine(ts);
+    return result;
+    //this.drawLine(ts);
   }
 
-  drawLine(ts: TwisterSection) {
-    this.ctx.moveTo(ts.points[0].x,ts.points[0].y);
+  drawLine(points: IPoint[]) {
+    this.ctx.fillStyle = "white";
+    this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+    this.ctx.moveTo(points[0].x,points[0].y);
     this.ctx.beginPath();
-    ts.points.forEach(p => {
+    points.forEach(p => {
       this.ctx.lineTo(p.x,p.y)
     });
     this.ctx.closePath();
