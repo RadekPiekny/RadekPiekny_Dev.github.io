@@ -13,26 +13,37 @@ export class TwisterComponent implements OnInit {
   canvasWidth: number = 600;
   canvasHeight: number = 600;
   twister: Twister[] = [];
-  animate: boolean = false;
+  animate: boolean = true;
 
   constructor() { }
 
   ngOnInit(): void {
     this.ctx = this.setupCanvas(this.canvas);
     this.twister.push(this.generateTwister());
+    this.twister.push(this.generateTwister());
+    this.twister.push(this.generateTwister());
+    this.twister.push(this.generateTwister());
     this.runAnimation();
   }
 
   runAnimation () {
-    this.animate = !this.animate;
+    this.ctx.fillStyle = "white";
+    this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
     this.twister.forEach(t => {
       this.moveTwister(t);
     })
+    if (this.animate) {
+      requestAnimationFrame(() => this.runAnimation());
+    }
   }
 
   moveTwister(t: Twister) {
-    let corePoints: IPoint[] = this.newTwisterCorePoints(t);
-    this.changeTwisterCore(t,corePoints);
+    if (t.changeProgress > t.changeDuration) {
+      t.changeProgress = 0;
+      let corePoints: IPoint[] = this.newTwisterCorePoints(t);
+      t.changePointsDiff = this.changeTwisterCore(t,corePoints);
+    }
+    this.twist(t);
   }
 
   newTwisterCorePoints(t: Twister): IPoint[] {
@@ -40,34 +51,23 @@ export class TwisterComponent implements OnInit {
     return this.generateTwisterPoints(newT);
   }
 
-  changeTwisterCore(oldTwister: Twister, newCorePoints: IPoint[], frames: number = 120) {
-    if (frames == 0) {
-      return;
-    }
+  changeTwisterCore(oldTwister: Twister, newCorePoints: IPoint[]):number[] {
     let diff: number[] = [];
     for (let i = 0; i < oldTwister.points.length; i++) {
-      diff.push((oldTwister.points[i].x - newCorePoints[i].x)/frames)
+      diff.push((oldTwister.points[i].x - newCorePoints[i].x)/oldTwister.changeDuration)
     }
-    this.twist(oldTwister, diff,frames);
+    return diff;
   }
 
-  twist(t: Twister, diff: number[],i: number) {
-    this.ctx.fillStyle = "white";
-    this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
-    if (i == 0) {
-      this.moveTwister(t);
-      return;
-    }
+  twist(t: Twister) {
+    t.changeProgress += 1; 
     t.points.forEach((p,i) => {
-      p.x -= diff[i];
+      p.x -= t.changePointsDiff[i];
     })
     
     t.circles = this.generateTwisterCircles(t);
     this.drawTwister(t);
-    //this.drawLine(t.points,"rgba(255,0,0,0.1)");
-    if (this.animate) {
-      requestAnimationFrame(() => this.twist(t,diff,i-1));
-    }
+    this.drawLine(t.points,"rgba(255,0,0,0.1)");
   }
 
   setupCanvas(canvas: ElementRef<HTMLCanvasElement>) {
@@ -98,11 +98,13 @@ export class TwisterComponent implements OnInit {
     t.sectionCount = 4;
     t.topMaxWidth = 100;
     t.bottomMaxWidth = 33;
-    t.bottomPoint = {x: 250, y: 500};
+    t.bottomPoint = {x: this.getRandomIntNumber(150,450), y: 500};
     t.sectionAngleMin = 45;
     t.sectionAngleMax = 135;
     t.sectionHeightMin = 50;
     t.sectionHeightMax = 50;
+    t.changeDuration = 180;
+    t.changeProgress = 181;
 
     for (let i = 0; i < t.sectionCount; i++) {
       t.twisterSection.push(this.generateTwisterSection(t,i))
