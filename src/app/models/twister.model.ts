@@ -11,6 +11,10 @@ export class Twister {
     sectionHeightMax: number;
     changeSectionDirection: boolean;
     points: IPoint[];
+    circles: TwisterPart[];
+    changeDuration: number;
+    changeProgress: number;
+    changePointsDiff: number[];
 }
 
 export class TwisterSection {
