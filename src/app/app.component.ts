@@ -17,6 +17,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.appSettingsService.darkMode$.next(this.colorScheme.matches);
+    this.appSettingsService.MainBGColor$.next(getComputedStyle(document.body).getPropertyValue('--Main-BG-Color'));
     this.colorScheme.addListener(val => {
       this.appSettingsService.darkMode$.next(val.matches);
       this.cdr.detectChanges();

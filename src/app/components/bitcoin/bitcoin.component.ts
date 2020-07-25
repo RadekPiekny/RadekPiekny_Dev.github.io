@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, NgZone } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, NgZone, ChangeDetectionStrategy } from '@angular/core';
 import { AppSettingsService } from 'src/app/services/appSettings.service';
 import { interval, Subscription } from 'rxjs';
 import { tap, switchMap, take, skip } from 'rxjs/operators';
@@ -6,7 +6,8 @@ import { tap, switchMap, take, skip } from 'rxjs/operators';
 @Component({
   selector: 'app-bitcoin',
   templateUrl: './bitcoin.component.html',
-  styleUrls: ['./bitcoin.component.css']
+  styleUrls: ['./bitcoin.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BitcoinComponent implements OnInit {
   themeModeSubscription: Subscription;
@@ -87,6 +88,10 @@ export class BitcoinComponent implements OnInit {
     this.ctx = this.setupCanvas(this.canvas);
     this.ctx.fillStyle = this.backgroundColor;
     
+    this.appSettingsService.MainBGColor$.subscribe(color => {
+      console.log(color);
+    })
+
     this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
     this.drawBitcoin2();
     this.getAllPixelArr();

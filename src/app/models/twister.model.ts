@@ -1,3 +1,5 @@
+import { IPoint } from './graphic-general.model';
+
 export class Twister {
     sectionCount: number;
     twisterSection: TwisterSection[] = [];
@@ -49,9 +51,4 @@ export class TwisterPart {
     colorEnd: string;
     tendencyRight: number;
     tendencyLeft: number;
-}
-
-export interface IPoint {
-    x: number;
-    y: number;
 }

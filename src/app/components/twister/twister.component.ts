@@ -1,6 +1,6 @@
 import { Twister, TwisterPart, TwisterSection } from './../../models/twister.model';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { IPoint } from 'src/app/models/lightning.model';
+import { IPoint } from 'src/app/models/graphic-general.model';
 
 @Component({
   selector: 'twister',
@@ -19,6 +19,10 @@ export class TwisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.ctx = this.setupCanvas(this.canvas);
+    this.twister.push(this.generateTwister());
+    this.twister.push(this.generateTwister());
+    this.twister.push(this.generateTwister());
+    this.twister.push(this.generateTwister());
     this.twister.push(this.generateTwister());
     this.twister.push(this.generateTwister());
     this.twister.push(this.generateTwister());
@@ -72,9 +76,8 @@ export class TwisterComponent implements OnInit {
 
   setupCanvas(canvas: ElementRef<HTMLCanvasElement>) {
     let devicePixelRatio = window.devicePixelRatio;
-    var rect = canvas.nativeElement.getBoundingClientRect();
-    canvas.nativeElement.width = this.canvasWidth *devicePixelRatio;
-    canvas.nativeElement.height = this.canvasHeight *devicePixelRatio;
+    canvas.nativeElement.width = this.canvasWidth * devicePixelRatio;
+    canvas.nativeElement.height = this.canvasHeight * devicePixelRatio;
     canvas.nativeElement.style.width = (this.canvasWidth).toString() + "px";
     canvas.nativeElement.style.height = (this.canvasHeight).toString() + "px";
     let canvas_context = canvas.nativeElement.getContext('2d');
@@ -95,14 +98,14 @@ export class TwisterComponent implements OnInit {
 
   generateDefaultTwister(): Twister {
     let t: Twister = new Twister;
-    t.sectionCount = 4;
+    t.sectionCount = 14;
     t.topMaxWidth = 100;
     t.bottomMaxWidth = 33;
     t.bottomPoint = {x: this.getRandomIntNumber(150,450), y: 500};
-    t.sectionAngleMin = 45;
-    t.sectionAngleMax = 135;
-    t.sectionHeightMin = 50;
-    t.sectionHeightMax = 50;
+    t.sectionAngleMin = 30;
+    t.sectionAngleMax = 150;
+    t.sectionHeightMin = 20;
+    t.sectionHeightMax = 20;
     t.changeDuration = 180;
     t.changeProgress = 181;
 

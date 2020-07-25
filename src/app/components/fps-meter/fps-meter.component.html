@@ -1,0 +1,9 @@
+<div  (click)="run()" [style.height]="height + 'px'" [style.width]="width + 'px'">
+  <span>{{fps}} fps</span>
+  <svg #svg [attr.height]="height-19" [attr.viewBox]="'0 0 ' + width / (height-19) * 100 + ' 100'">
+    <g shape-rendering="crispEdges">
+      <polyline *ngFor="let divider of dividers" [attr.points]="'0 ' + divider.y + ' ' + width / (height-19) * 100 + ' ' + divider.y" stroke="rgba(0,0,0,0.1)" [attr.stroke-width]="'1'" style="fill:none;"/>
+    </g>
+    <polyline [attr.points]="polyline" stroke="rgba(0,0,0,0.3)" [attr.stroke-width]="1 / (height-19) * 100" style="fill:none;"/>
+  </svg>
+</div>

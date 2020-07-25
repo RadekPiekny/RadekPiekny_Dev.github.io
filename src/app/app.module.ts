@@ -14,6 +14,8 @@ import { ResumeViewComponent } from './views/resume-view/resume-view.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { TwisterComponent } from './components/twister/twister.component';
 import { LightningWebglComponent } from './components/lightning-webgl/lightning-webgl.component';
+import { FpsMeterComponent } from './components/fps-meter/fps-meter.component';
+import { FpsMeterCanvasComponent } from './components/fps-meter-canvas/fps-meter-canvas.component';
 
 
 @NgModule({
@@ -29,7 +31,9 @@ import { LightningWebglComponent } from './components/lightning-webgl/lightning-
     ResumeViewComponent,
     LoadingComponent,
     TwisterComponent,
-    LightningWebglComponent
+    LightningWebglComponent,
+    FpsMeterComponent,
+    FpsMeterCanvasComponent
   ],
   imports: [
     BrowserModule,

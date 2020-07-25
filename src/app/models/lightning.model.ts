@@ -1,3 +1,5 @@
+import { IPoint } from './graphic-general.model';
+
 export class Lightning {
     id: number;
     parentId?: number;
@@ -69,11 +71,6 @@ export class ITendencyHorizontal {
 export class ITendencyVertical {
     top: number;
     bottom: number;
-}
-
-export interface IPoint {
-    x: number;
-    y: number;
 }
 
 export interface ILine {
