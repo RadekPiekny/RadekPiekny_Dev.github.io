@@ -17,6 +17,16 @@
     --Color-Grey-15: rgba(239,239,239,1);
     --Color-Grey-16: rgba(255,255,255,1);
 
+    --Light-Color-Primary: rgba(0, 141, 228,1);
+    --Light-Main-BG-Color: var(--Color-Grey-16);
+    --Light-Nav-BG-Color: LIGHTSKYBLUE;
+    --Light-Nav-BG-Active: rgb(200,200,200);
+    --Light-Font-Color: rgb(40,40,40);
+    --Light-Element-BG-Color: rgb(212, 212, 212);
+    --Light-Primary-Color: LIGHTSKYBLUE;
+    --Light-Button-Border-Color: var(--Color-Grey-13);
+
+    --Dark-Color-Primary: var(--Light-Color-Primary);
     --Dark-Main-BG-Color: var(--Color-Grey-3);
     --Dark-Nav-BG-Color: MIDNIGHTBLUE;
     --Dark-Nav-BG-Active: rgb(55,55,55);
@@ -25,16 +35,10 @@
     --Dark-Primary-Color: LIGHTSKYBLUE;
     --Dark-Button-Border-Color: var(--Color-Grey-4);
 
-    --Light-Main-BG-Color: var(--Color-Grey-15);
-    --Light-Nav-BG-Color: LIGHTSKYBLUE;
-    --Light-Nav-BG-Active: rgb(200,200,200);
-    --Light-Font-Color: rgb(40,40,40);
-    --Light-Element-BG-Color: rgb(212, 212, 212);
-    --Light-Primary-Color: LIGHTSKYBLUE;
-    --Light-Button-Border-Color: var(--Color-Grey-13);
     --nav-height: 3rem;
 }
 .light {
+    --Color-Primary: var(--Light-Color-Primary);
     --Main-BG-Color: var(--Light-Main-BG-Color);
     --Nav-BG-Color: var(--Light-Nav-BG-Color);
     --Nav-BG-Active: var(--Light-Nav-BG-Active);
@@ -44,6 +48,7 @@
     --Button-Border-Color: var(--Light-Button-Border-Color);
 }
 .dark {
+    --Color-Primary: var(--Dark-Color-Primary);
     --Main-BG-Color: var(--Dark-Main-BG-Color);
     --Nav-BG-Color: var(--Dark-Nav-BG-Color);
     --Nav-BG-Active: var(--Dark-Nav-BG-Active);
@@ -107,6 +112,9 @@ button {
     padding: .5rem 1rem;
     border: 1px solid var(--Button-Border-Color);
 }
+.button-primary {
+    background-color: var(--Color-Primary);
+}
 .button-float {
     @extend .elevation-2;
     position: fixed;
@@ -121,4 +129,8 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 24px;
+    color: white;
+    border: 1px solid var(--Light-Color-Primary);
+    background-color: var(--Color-Primary);
 }

@@ -20,13 +20,6 @@ export class TwisterComponent implements OnInit {
   ngOnInit(): void {
     this.ctx = this.setupCanvas(this.canvas);
     this.twister.push(this.generateTwister());
-    this.twister.push(this.generateTwister());
-    this.twister.push(this.generateTwister());
-    this.twister.push(this.generateTwister());
-    this.twister.push(this.generateTwister());
-    this.twister.push(this.generateTwister());
-    this.twister.push(this.generateTwister());
-    this.twister.push(this.generateTwister());
     this.runAnimation();
   }
 
@@ -153,7 +146,7 @@ export class TwisterComponent implements OnInit {
       tp.scaleHorizontal = 1;
       tp.skewHorizontal = 0;
       tp.skewVertical = 0;
-      tp.scaleVertical = 0.3;
+      tp.scaleVertical = 0.5;
       tp.moveHorizontal = 0;
       tp.moveVertical = 0;
       result.push(tp);

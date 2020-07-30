@@ -18,11 +18,7 @@ import { FpsMeterComponent } from './components/fps-meter/fps-meter.component';
 import { FpsMeterCanvasComponent } from './components/fps-meter-canvas/fps-meter-canvas.component';
 import { ComponentPlaygroundComponent } from './views/component-playground/component-playground.component';
 import { IconDirective } from './directives/icon.directive';
-
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCogs } from '@fortawesome/pro-light-svg-icons';
-
 
 @NgModule({
   declarations: [
@@ -52,7 +48,4 @@ import { faCogs } from '@fortawesome/pro-light-svg-icons';
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor() {
-    library.add(faCogs);
-  }
 }
