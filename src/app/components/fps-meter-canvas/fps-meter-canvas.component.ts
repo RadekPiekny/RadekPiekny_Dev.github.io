@@ -114,8 +114,8 @@ export class FpsMeterCanvasComponent implements OnInit {
   }
 
   drawLine() {
-    this.ctx.fillStyle = "transparent";
-    this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+    //this.ctx.fillStyle = "transparent";
+    this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
     this.ctx.beginPath();
     this.ctx.moveTo(this.visualizer[0].x,this.visualizer[0].y);
     this.visualizer.forEach(p => {

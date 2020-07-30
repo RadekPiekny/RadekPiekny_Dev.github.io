@@ -7,6 +7,7 @@ import { ResumeViewComponent } from './views/resume-view/resume-view.component';
 import { LightningCanvasComponent } from './components/lightning-canvas/lightning-canvas.component';
 import { TwisterComponent } from './components/twister/twister.component';
 import { LightningWebglComponent } from './components/lightning-webgl/lightning-webgl.component';
+import { ComponentPlaygroundComponent } from './views/component-playground/component-playground.component';
 
 const routes: Routes = [
   { path: 'resume', component: ResumeViewComponent },
@@ -15,7 +16,8 @@ const routes: Routes = [
   { path: 'lightning-canvas', component: LightningCanvasComponent },
   { path: 'lightning-webgl', component: LightningWebglComponent },
   { path: 'twister', component: TwisterComponent },
-  { path: 'playground', component: PlaygroundComponent }
+  { path: 'playground', component: PlaygroundComponent },
+  { path: 'component-playground', component: ComponentPlaygroundComponent }
 ];
 
 @NgModule({

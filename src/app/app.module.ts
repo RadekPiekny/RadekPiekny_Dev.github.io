@@ -16,6 +16,12 @@ import { TwisterComponent } from './components/twister/twister.component';
 import { LightningWebglComponent } from './components/lightning-webgl/lightning-webgl.component';
 import { FpsMeterComponent } from './components/fps-meter/fps-meter.component';
 import { FpsMeterCanvasComponent } from './components/fps-meter-canvas/fps-meter-canvas.component';
+import { ComponentPlaygroundComponent } from './views/component-playground/component-playground.component';
+import { IconDirective } from './directives/icon.directive';
+
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCogs } from '@fortawesome/pro-light-svg-icons';
 
 
 @NgModule({
@@ -33,13 +39,20 @@ import { FpsMeterCanvasComponent } from './components/fps-meter-canvas/fps-meter
     TwisterComponent,
     LightningWebglComponent,
     FpsMeterComponent,
-    FpsMeterCanvasComponent
+    FpsMeterCanvasComponent,
+    ComponentPlaygroundComponent,
+    IconDirective
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FontAwesomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor() {
+    library.add(faCogs);
+  }
+}
