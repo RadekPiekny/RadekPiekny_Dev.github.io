@@ -1,0 +1,21 @@
+<input [disabled]="disabled" [value]="_value ? _value[valueProperty] : ''" (input)="onChange($event)" class="value-property">
+<div  class="fake-input-container" [ngStyle]="{'display': display}">
+    <label>{{label}}</label>
+    <div #fakeInputValue class="fake-input-value" (click)="openList = !openList" [ngClass]="border ? 'border' : ''">
+      {{_value ? getDisplayValue(_value) : 'select...'}}
+      <div class="icon-arrow" [ngClass]="openList ? 'rotate' : ''">
+        <svg viewBox="0 0 10 10">
+          <polyline points="1 3 5 7 9 3" class="icon-stroke"/>
+        </svg>
+      </div>
+    </div>
+</div>
+
+<div class="modal-background" *ngIf="openList" (click)="openList = !openList">
+  <div  [ngStyle]="listWindowStyle" class="list-window elevation-2" (click)="$event.stopPropagation()">
+    <input type="text" (keyup)="searchTerm$.next($event.target.value)" class="search" placeholder="search">
+    <ul>
+      <li *ngFor="let item of filteredData$ | async" (click)="changeValue(item)">{{getDisplayValue(item)}}</li>
+    </ul>
+  </div>
+</div>
