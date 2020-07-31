@@ -1,0 +1,15 @@
+<svg [attr.height]="width" [attr.width]="width" viewBox="0 0 20 20">
+    <circle [attr.r]="r" cx="10" cy="10" fill="transparent"
+            [attr.stroke]="'rgba(0,0,0,0.1)'"
+            [attr.stroke-width]="strokeWidthViewBox"
+            [attr.stroke-dasharray]="circumference + ' ' + circumference"
+            transform="rotate(-90) translate(-20)" />
+    <circle [attr.r]="r" cx="10" cy="10" fill="transparent"
+            [attr.stroke]="'tomato'"
+            [attr.stroke-width]="strokeWidthViewBox"
+            [attr.stroke-dasharray]="strokeDashArray"
+            transform="rotate(-90) translate(-20)" />
+  </svg>
+  <div class="content" [ngStyle]="contentStyle">
+        <ng-content></ng-content>
+  </div>
