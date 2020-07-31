@@ -1,0 +1,112 @@
+:host {
+    --select-height: 2.25rem;
+    position: relative;
+    box-sizing: border-box;
+    min-width: 220px;
+    font-size: .875rem;
+}
+label {
+    font-size: 0.625rem;
+    padding: .25rem .625rem;
+}
+.fake-input-container {
+    display: flex;
+    flex-direction: column;
+}
+.fake-input-value {
+    display: flex;
+    align-items: center;
+    border-radius: .125rem;
+    padding: 0 2rem 0 .625rem;
+    height: var(--select-height);
+    align-items: center;
+    
+    text-overflow: ellipsis;
+    font-size: .875rem;
+    position: relative;
+    cursor: pointer;
+}
+.border {
+    border: .0625rem solid var(--Input-Border-Color);
+}
+.icon-arrow {
+    position: absolute;
+    right: .625rem;
+    width: .625rem;
+    transition: transform .2s ease-in-out;
+}
+.icon-stroke {
+    stroke-linecap: round;
+    stroke: var(--Input-Select-Icon-Color);
+    stroke-width: 1;
+    fill: transparent;
+}
+ul {
+    max-height: 300px;
+    overflow: auto;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+.value-property {
+    display: none;
+}
+.display-property {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    padding: .25rem .625rem;
+    font-size: .875rem;
+    line-height: 1.5;
+    height: calc(1.5rem + .5rem + 2px);
+}
+.open {
+    height: 200px;
+}
+.modal-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+}
+.list-window {
+    position: fixed;
+    background-color: white;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-width: 180px;
+    animation: slide-up .2s ease forwards;
+    border-radius: .25rem;
+}
+li {
+    margin: 0;
+    padding: 0 .625rem;
+    height: var(--select-height);
+    line-height: var(--select-height);
+}
+li:hover {
+    background-color: rgb(240,240,240);
+}
+.search {
+    padding: .3rem;
+    margin: 1rem;
+    border: .0625rem solid var(--Input-Border-Color);
+}
+.rotate {
+    transform: rotate(180deg);
+}
+
+@keyframes slide-up 
+{
+    0% {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
