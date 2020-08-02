@@ -3,7 +3,17 @@
                 <stop offset="0%" style="stop-color:rgba(16, 180, 10,0);stop-opacity:1" />
                 <stop offset="100%" style="stop-color:rgba(16, 180, 10,1);stop-opacity:1" />
               </linearGradient>
-
+        <circle [attr.r]="r" cx="10" cy="10" fill="transparent"
+              [attr.stroke]="'rgba(0,0,0,0.1)'"
+              [attr.stroke-width]="strokeWidthViewBox"
+              [attr.stroke-dasharray]="circumference + ' ' + circumference"
+              transform="rotate(-90) translate(-20)" />
+      <circle [attr.class]="animate ? 'animate' : ''" [attr.r]="r" cx="10" cy="10" fill="transparent"
+              [attr.stroke]="'tomato'"
+              [attr.stroke-width]="strokeWidthViewBox"
+              [attr.stroke-dasharray]="strokeDashArray"
+              [attr.stroke-linecap]="lineCap"
+              transform="rotate(-90) translate(-20)" />
 <path fill="transparent" [attr.d]="circlePath(10,10,r)" stroke="url(#grad1)"/>
 
         
