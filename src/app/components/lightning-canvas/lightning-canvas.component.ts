@@ -1,8 +1,9 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { ILightning, ILine, IPoint } from 'src/app/models/lightning.model';
+import { ILightning, ILine } from 'src/app/models/lightning.model';
 import { Subject, of } from 'rxjs';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { delay, tap } from 'rxjs/operators';
+import { IPoint } from 'src/app/models/graphic-general.model';
 
 @Component({
   selector: 'lightning-canvas',

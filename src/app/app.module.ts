@@ -16,6 +16,7 @@ import { TwisterComponent } from './components/twister/twister.component';
 import { LightningWebglComponent } from './components/lightning-webgl/lightning-webgl.component';
 import { FpsMeterComponent } from './components/fps-meter/fps-meter.component';
 import { FpsMeterCanvasComponent } from './components/fps-meter-canvas/fps-meter-canvas.component';
+import { PieChartComponent } from './components/pie-chart/pie-chart.component';
 import { ComponentPlaygroundComponent } from './views/component-playground/component-playground.component';
 import { IconDirective } from './directives/icon.directive';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -37,6 +38,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     FpsMeterComponent,
     FpsMeterCanvasComponent,
     ComponentPlaygroundComponent,
+    PieChartComponent,
     IconDirective
   ],
   imports: [
