@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -19,7 +20,6 @@ import { FpsMeterCanvasComponent } from './components/fps-meter-canvas/fps-meter
 import { PieChartComponent } from './components/pie-chart/pie-chart.component';
 import { ComponentPlaygroundComponent } from './views/component-playground/component-playground.component';
 import { IconDirective } from './directives/icon.directive';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -43,8 +43,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-    FontAwesomeModule
+    BrowserAnimationsModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
