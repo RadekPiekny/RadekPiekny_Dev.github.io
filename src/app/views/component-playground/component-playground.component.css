@@ -1,0 +1,11 @@
+:host {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - var(--nav-height));
+}
+p {
+    max-width: 300px;
+    background-color: bisque;
+    overflow: hidden;
+}
