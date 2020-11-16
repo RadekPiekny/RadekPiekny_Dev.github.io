@@ -1,5 +1,5 @@
 
-<div  id="whatever" [ngClass]="(appSettingsService.darkMode$ | async) ? 'dark':'light'">
+<div [ngClass]="(appSettingsService.darkMode$ | async) ? 'dark':'light'">
     <nav >
         <a [routerLink]="[ '/resume' ]">resume-view</a>
         <a [routerLink]="[ '/bitcoin' ]">bitcoin</a>
@@ -10,10 +10,9 @@
         <a [routerLink]="[ '/playground' ]">playground</a>
         <a [routerLink]="[ '/slider' ]">slider</a>
         <a [routerLink]="[ '/component-playground' ]">component-playground</a>
-        
         <light-dark-mode [darkMode]="appSettingsService.darkMode$ | async" (darkModeChange)="appSettingsService.darkMode$.next($event)"></light-dark-mode>
     </nav>
-    <main #whatever>
+    <main>
         <router-outlet></router-outlet>
     </main>
 </div>
